@@ -31,7 +31,7 @@
                     <a href="/" class="font-medium hover:text-gray-200">Home</a>
                     <a href="{{ route('paket-wisata.index') }}" class="font-medium hover:text-gray-200">Wisata Jogja</a>
                     <a href="{{ route('rental.index') }}" class="font-medium hover:text-gray-200">Rental Kendaraan</a>
-                    <a href="#" class="font-medium hover:text-gray-200">Blog Wisata</a>
+                    <a href="{{ route('blog-wisata.index') }}" class="font-medium hover:text-gray-200">Blog Wisata</a>
                 </nav>
                 <div class="flex items-center gap-4 text-white">
                     @auth
@@ -65,12 +65,12 @@
         <section class="bg-gray-100 py-8">
             <div class="container mx-auto px-4">
                 <div class="flex justify-center items-center space-x-4 mb-8">
-                    <a href="{{ route('paket-wisata.index', ['view_mode' => 'destinasi'] + request()->except(['view_mode', 'filter_pkg_duration', 'filter_pkg_type', 'filter_pkg_price'])) }}" 
+                    <a href="{{ route('paket-wisata.index', ['view_mode' => 'destinasi'] + request()->except(['view_mode', 'filter_pkg_duration', 'filter_pkg_type', 'filter_pkg_price'])) }}"
                        class="px-6 py-3 rounded-lg font-semibold transition-colors
                               {{ $currentFilters['view_mode'] == 'destinasi' ? 'bg-custom-blue text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-200 shadow' }}">
                         Destinasi Populer
                     </a>
-                    <a href="{{ route('paket-wisata.index', ['view_mode' => 'paket'] + request()->except(['view_mode', 'filter_dest_type', 'filter_dest_price'])) }}" 
+                    <a href="{{ route('paket-wisata.index', ['view_mode' => 'paket'] + request()->except(['view_mode', 'filter_dest_type', 'filter_dest_price'])) }}"
                        class="px-6 py-3 rounded-lg font-semibold transition-colors
                               {{ $currentFilters['view_mode'] == 'paket' ? 'bg-custom-blue text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-200 shadow' }}">
                         Paket Wisata

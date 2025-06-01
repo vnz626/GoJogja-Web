@@ -18,7 +18,7 @@
               sans: ['Poppins', 'sans-serif'],
             },
             colors: {
-              'custom-blue': '#518EF8', 
+              'custom-blue': '#518EF8',
               'overlay-blue': '#6DC3F5',
             }
           }
@@ -37,9 +37,9 @@
                 </a>
                 <nav class="hidden md:flex items-center space-x-8 text-white">
                     <a href="/" class="font-medium hover:text-gray-200">Home</a>
-                    <a href="#" class="font-medium hover:text-gray-200">Paket Wisata</a>
+                    <a href="{{ route('paket-wisata.index') }}" class="font-medium hover:text-gray-200">Wisata Jogja</a>
                     <a href="{{ route('rental.index') }}" class="font-medium hover:text-gray-200">Rental Kendaraan</a>
-                    <a href="#" class="font-medium hover:text-gray-200">Blog Wisata</a>
+                    <a href="{{ route('blog-wisata.index') }}" class="font-medium hover:text-gray-200">Blog Wisata</a>
                 </nav>
                 <div class="flex items-center gap-4 text-white">
                     @auth
@@ -82,7 +82,7 @@
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Kendaraan</label>
                         <input type="text" name="search" id="search" value="{{ $searchTerm ?? '' }}" placeholder="Contoh: Avanza, Vario..." class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue">
                     </div>
-                    
+
                     <div>
                         <label for="filter_type" class="block text-sm font-medium text-gray-700 mb-1">Filter Jenis</label>
                         <select name="filter_type" id="filter_type" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue">
@@ -92,7 +92,7 @@
                             @endforeach
                         </select>
                     </div>
-                    
+
                     <div>
                         <label for="sort_by" class="block text-sm font-medium text-gray-700 mb-1">Urutkan</label>
                         <select name="sort_by" id="sort_by" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue">
@@ -101,7 +101,7 @@
                             <option value="harga_desc" {{ $currentSortBy == 'harga_desc' ? 'selected' : '' }}>Harga Tertinggi - Terendah</option>
                         </select>
                     </div>
-                    
+
                     <div class="md:col-span-4 mt-4 md:mt-0 text-right">
                          <button type="submit" class="bg-custom-blue text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">
                             Terapkan Filter

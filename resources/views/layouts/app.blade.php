@@ -15,8 +15,8 @@
         theme: {
           extend: {
             fontFamily: { sans: ['Poppins', 'sans-serif'] },
-            colors: { 
-              'custom-blue': '#518EF8', 
+            colors: {
+              'custom-blue': '#518EF8',
               'overlay-blue': '#6DC3F5' // Warna ini akan dipakai header
             }
           }
@@ -29,13 +29,13 @@
         <header class="bg-overlay-blue shadow-md sticky top-0 z-20">
             <div class="container mx-auto flex justify-between items-center p-4 text-white">
                 <a href="/">
-                    <img src="/images/logo.png" alt="GoJogja Logo" class="h-12"> 
+                    <img src="/images/logo.png" alt="GoJogja Logo" class="h-12">
                 </a>
                 <nav class="hidden md:flex items-center space-x-8">
                     <a href="/" class="font-medium">Home</a>
                     <a href="{{ route('paket-wisata.index') }}" class="font-medium hover:text-gray-200">Wisata Jogja</a>
                     <a href="{{ route('rental.index') }}" class="font-medium">Rental Kendaraan</a>
-                    <a href="#" class="font-medium">Blog Wisata</a>
+                    <a href="{{ route('blog-wisata.index') }}" class="font-medium">Blog Wisata</a>
                 </nav>
                 <div class="flex items-center gap-4">
                     @auth
@@ -64,7 +64,7 @@
             @yield('content')
         </main>
 
-        {{-- 
+        {{--
         <footer class="bg-gray-200 text-center p-4 mt-auto">
             <p class="text-gray-600">&copy; {{ date('Y') }} GoJogja. All Rights Reserved.</p>
         </footer>

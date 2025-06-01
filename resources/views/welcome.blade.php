@@ -26,13 +26,13 @@
         }
       }
     </script>
-    
+
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 </head>
 <body class="font-sans antialiased">
     <div class="w-full">
-        
+
         <header class="absolute top-0 left-0 right-0 z-10 p-6">
             <div class="container mx-auto flex justify-between items-center">
                 <a href="/">
@@ -40,9 +40,9 @@
                 </a>
                 <nav class="hidden md:flex items-center space-x-8">
                     <a href="/" class="text-white font-medium">Home</a>
-                    <a href="#" class="text-white font-medium">Paket Wisata</a>
-                    <a href="#" class="text-white font-medium">Rental Kendaraan</a>
-                    <a href="#" class="text-white font-medium">Blog Wisata</a>
+                    <a href="{{ route('paket-wisata.index') }}" class="text-white font-medium">Wisata Jogja</a>
+                    <a href="{{ route('rental.index') }}" class="text-white font-medium">Rental Kendaraan</a>
+                    <a href="{{ route('blog-wisata.index') }}" class="text-white font-medium">Blog Wisata</a>
                 </nav>
                 <div class="flex items-center gap-4">
                     @auth
@@ -54,15 +54,15 @@
                                 </svg>
                             </button>
 
-                            <div 
-                                x-show="open" 
+                            <div
+                                x-show="open"
                                 @click.outside="open = false"
                                 x-transition
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20"
                                 style="display: none;"
                             >
                                 <a href="/profil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil Saya</a>
-                                
+
                                 <form action="/logout" method="POST">
                                     @csrf
                                     <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -103,7 +103,7 @@
             <section class="my-20">
                 <div class="flex justify-between items-center mb-8">
                     <h2 class="text-3xl font-bold text-gray-800">Rekomendasi Wisata</h2>
-                    <a href="#" class="text-custom-blue font-semibold flex items-center gap-2 hover:underline">
+                    <a href="/paket-wisata" class="text-custom-blue font-semibold flex items-center gap-2 hover:underline">
                         <span>Lihat Semua</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
@@ -132,7 +132,7 @@
              <section class="my-20">
                 <div class="flex justify-between items-center mb-8">
                     <h2 class="text-3xl font-bold text-gray-800">Rental Kendaraan</h2>
-                    <a href="#" class="text-custom-blue font-semibold flex items-center gap-2 hover:underline">
+                    <a href="/rental-kendaraan" class="text-custom-blue font-semibold flex items-center gap-2 hover:underline">
                         <span>Lihat Semua</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
@@ -158,11 +158,11 @@
            <section class="my-20">
                 <h2 class="text-3xl font-bold text-gray-800 mb-8">Blog Wisata</h2>
                 <div class="space-y-8">
-                    
+
                     <div class="flex flex-col md:flex-row items-center gap-6 p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                         <img src="/images/blog-kuliner.webp" alt="Kuliner Jogja" class="w-full md:w-56 h-48 md:h-full object-cover rounded-lg">
                         <div class="flex-1">
-                            <a href="#" class="text-xl font-bold text-custom-blue hover:underline">Kuliner Jogja Bagian Utara: Surga Rasa dan Petualangan yang Menggoda</a>
+                            <a href="/blog/kuliner-jogja-bagian-utara" class="text-xl font-bold text-custom-blue hover:underline">Kuliner Jogja Bagian Utara: Surga Rasa dan Petualangan yang Menggoda</a>
                             <div class="flex items-center text-sm text-gray-500 mt-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -173,7 +173,7 @@
                                 Overview Wisata Kuliner Jogja Bagian Utara Jogja tidak hanya terkenal dengan warisan budaya dan sejarahnya, tetapi juga sebagai destinasi kuliner yang memikat. Khususnya di bagian utara, wisata kuliner Jogja menyajikan berbagai hidangan yang kaya rasa, memadukan tradisi dan inovasi modern,...
                             </p>
                         </div>
-                        <a href="#" class="bg-custom-blue text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 self-center hover:bg-blue-600 transition-colors">
+                        <a href="/blog/kuliner-jogja-bagian-utara" class="bg-custom-blue text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 self-center hover:bg-blue-600 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
                         </a>
                     </div>
@@ -181,7 +181,7 @@
                     <div class="flex flex-col md:flex-row items-center gap-6 p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                         <img src="/images/blog-pantai.webp" alt="Pantai Gunungkidul" class="w-full md:w-56 h-48 md:h-full object-cover rounded-lg">
                         <div class="flex-1">
-                            <a href="#" class="text-xl font-bold text-custom-blue hover:underline">7 Pantai Sepi di Gunungkidul yang Wajib Dikunjungi: Surga Tersembunyi di Jogja</a>
+                            <a href="/blog/pantai-gunungkidul" class="text-xl font-bold text-custom-blue hover:underline">7 Pantai Sepi di Gunungkidul yang Wajib Dikunjungi: Surga Tersembunyi di Jogja</a>
                              <div class="flex items-center text-sm text-gray-500 mt-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -192,7 +192,7 @@
                                 Mengenal Gunungkidul, Surga Tersembunyi di Ujung Selatan Jogja. Dari pegunungan kapur, goa-goa purba, hingga deretan pantai eksotis yang membentang di pesisir selatan. Meskipun beberapa pantai seperti Baron, Indrayanti,...
                             </p>
                         </div>
-                        <a href="#" class="bg-custom-blue text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 self-center hover:bg-blue-600 transition-colors">
+                        <a href="/gunungkidul" class="bg-custom-blue text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 self-center hover:bg-blue-600 transition-colors">
                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </a>
                     </div>
@@ -200,7 +200,7 @@
                     <div class="flex flex-col md:flex-row items-center gap-6 p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
                         <img src="/images/taman-sari2.webp" alt="Taman Sari" class="w-full md:w-56 h-48 md:h-full object-cover rounded-lg">
                         <div class="flex-1">
-                            <a href="#" class="text-xl font-bold text-custom-blue hover:underline">Taman Sari Yogyakarta: 5 Fakta Menarik yang Wajib Anda Ketahui</a>
+                            <a href="/blog/taman-sari-yogyakarta" class="text-xl font-bold text-custom-blue hover:underline">Taman Sari Yogyakarta: 5 Fakta Menarik yang Wajib Anda Ketahui</a>
                              <div class="flex items-center text-sm text-gray-500 mt-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -211,7 +211,7 @@
                                Obelix Hill Jogja, Surganya Sunset dan Spot Instagramable di Yogyakarta Jogja dikenal sebagai kota budaya dan pariwisata yang tak pernah kehilangan pesonanya. Dari wisata sejarah, kuliner, sampai tempat nongkrong kekinian, semua bisa kamu temukan di sini. Salah satu destinasi baru...
                             </p>
                         </div>
-                        <a href="#" class="bg-custom-blue text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 self-center hover:bg-blue-600 transition-colors">
+                        <a href="/blog/taman-sari-yogyakarta" class="bg-custom-blue text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 self-center hover:bg-blue-600 transition-colors">
                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </a>
                     </div>
@@ -222,7 +222,7 @@
         <footer class="relative text-white pt-20 pb-8 overflow-hidden">
             <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/footer-background.webp');"></div>
             <div class="absolute inset-0 bg-overlay-blue opacity-80 z-1"></div>
-            
+
             <div class="container mx-auto px-6 relative z-10">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     <div>

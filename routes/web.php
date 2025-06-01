@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\TourPackageController; // <-- Tambahkan ini
@@ -29,3 +30,6 @@ Route::get('/rental-kendaraan', [RentalController::class, 'index'])->name('renta
 
 // Rute Paket Wisata <-- Tambahkan ini
 Route::get('/paket-wisata', [TourPackageController::class, 'index'])->name('paket-wisata.index');
+
+// Rute untuk halaman lainnya
+Route::get('/blog-wisata', [BlogController::class, 'index'])->name('blog-wisata.index');
