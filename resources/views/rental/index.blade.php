@@ -129,12 +129,11 @@
                                 <p class="text-xl font-bold text-custom-blue mb-4 mt-auto">
                                     Rp {{ number_format($vehicle['price_per_day'], 0, ',', '.') }} <span class="text-sm font-normal text-gray-500">/ hari</span>
                                 </p>
-                                <a href="#" class="mt-auto bg-custom-blue text-white text-center font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-                                    Detail
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                    </svg>
-                                </a>
+                                <a href="{{ route('rental.show', $vehicle['slug'] ?? $vehicle['id']) }}" class="mt-auto bg-custom-blue text-white text-center font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+    </svg>
+</a>
                             </div>
                         </div>
                         @endforeach
