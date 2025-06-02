@@ -32,35 +32,35 @@
 </head>
 <body class="bg-white font-sans">
     <div id="app" class="flex flex-col min-h-screen">
-        <header class="absolute top-0 left-0 right-0 z-30 p-6">
-            <div class="container mx-auto flex justify-between items-center">
+        <header class="bg-overlay-blue opacity-110 shadow-md sticky top-0 z-20">
+            <div class="container mx-auto flex justify-between items-center p-4 text-white">
                 <a href="/">
-                    <img src="/images/logo.png" alt="GoJogja Logo" class="h-12 md:h-16">
+                    <img src="/images/logo.png" alt="GoJogja Logo" class="h-12">
                 </a>
-                <nav class="hidden md:flex items-center space-x-8 text-white header-text-shadow">
-                    <a href="/" class="font-medium hover:text-gray-200">Home</a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="font-medium">Home</a>
                     <a href="{{ route('paket-wisata.index') }}" class="font-medium hover:text-gray-200">Wisata Jogja</a>
-                    <a href="{{ route('rental.index') }}" class="font-medium hover:text-gray-200">Rental Kendaraan</a>
-                    <a href="{{ route('blogs.index') }}" class="font-medium hover:text-gray-200">Blog Wisata</a>
+                    <a href="{{ route('rental.index') }}" class="font-medium">Rental Kendaraan</a>
+                    <a href="{{ route('blogs.index') }}" class="font-medium">Blog Wisata</a>
                 </nav>
-                <div class="flex items-center gap-4 text-white header-text-shadow">
+                <div class="flex items-center gap-4">
                     @auth
                         <div x-data="{ open: false }" class="relative">
-                            <button @click="open = !open" class="flex items-center gap-2 font-semibold focus:outline-none hover:text-gray-200">
+                            <button @click="open = !open" class="flex items-center gap-2 font-semibold focus:outline-none">
                                 <span>Halo, {{ Auth::user()->name }}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform" :class="{'rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
                             </button>
-                            <div x-show="open" @click.outside="open = false" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 text-gray-800" style="display: none;">
+                            <div x-show="open" @click.outside="open = false" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 text-gray-800" style="display: none;">
                                 <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm hover:bg-gray-100">Profil Saya</a>
-                                <form action="{{ route('logout') }}" method="POST">
+                                <form action="/logout" method="POST">
                                     @csrf
                                     <button type="submit" class="w-full text-left block px-4 py-2 text-sm hover:bg-gray-100">Logout</button>
                                 </form>
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" class="font-semibold hover:underline">Login</a>
-                        <a href="{{ route('register') }}" class="bg-white text-custom-blue font-semibold px-4 py-2 rounded-md hover:bg-gray-200">Daftar</a>
+                        <a href="/login" class="font-semibold hover:underline">Login</a>
+                        <a href="/register" class="bg-white text-custom-blue font-semibold px-4 py-2 rounded-md hover:bg-gray-200">Daftar</a>
                     @endauth
                 </div>
             </div>
