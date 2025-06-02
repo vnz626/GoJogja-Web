@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
 
 // Rute Rental Kendaraan
 Route::get('/rental-kendaraan', [RentalController::class, 'index'])->name('rental.index');
+Route::get('/rental-kendaraan/{idOrSlug}', [RentalController::class, 'show'])->name('rental.show'); // idOrSlug
 
 // Rute Paket Wisata <-- Tambahkan ini
 Route::get('/paket-wisata', [TourPackageController::class, 'index'])->name('paket-wisata.index');
