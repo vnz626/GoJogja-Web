@@ -1,4 +1,5 @@
-{{-- <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -24,7 +25,7 @@
             }
             }
         }
-    </script>
+        </script>
     <style>
         body {
             background-image: url('/images/auth-background.jpg');
@@ -50,14 +51,14 @@
                 <input type="text" id="name" name="name" class="w-full bg-gray-50 border border-gray-300 text-gray-900 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-custom-blue @error('name') border-red-500 @enderror" placeholder="Nama Anda" value="{{ old('name') }}" required>
                 @error('name')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
+                    @enderror
             </div>
 
             <div class="mb-4">
                 <label for="email" class="block text-gray-700 font-medium mb-2">Alamat Email</label>
                 <input type="email" id="email" name="email" class="w-full bg-gray-50 border border-gray-300 text-gray-900 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-custom-blue @error('email') border-red-500 @enderror" placeholder="contoh@email.com" value="{{ old('email') }}" required>
                 @error('email')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -65,7 +66,7 @@
                 <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
                 <input type="password" id="password" name="password" class="w-full bg-gray-50 border border-gray-300 text-gray-900 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-custom-blue @error('password') border-red-500 @enderror" placeholder="•••••••• (Minimal 8 karakter)" required>
                 @error('password')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -82,4 +83,59 @@
         </p>
     </div>
 </body>
-</html> --}}
+</html>
+
+
+
+{{-- <x-guest-layout>
+    <form method="POST" action="{{ route('register') }}">
+        @csrf
+
+        <!-- Name -->
+        <div>
+            <x-input-label for="name" :value="__('Name')" />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        </div>
+
+        <!-- Email Address -->
+        <div class="mt-4">
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" :value="__('Password')" />
+
+            <x-text-input id="password" class="block mt-1 w-full"
+                            type="password"
+                            name="password"
+                            required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mt-4">
+            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+
+            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                            type="password"
+                            name="password_confirmation" required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <div class="flex items-center justify-end mt-4">
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+                {{ __('Already registered?') }}
+            </a>
+
+            <x-primary-button class="ms-4">
+                {{ __('Register') }}
+            </x-primary-button>
+        </div>
+    </form>
+</x-guest-layout> --}}

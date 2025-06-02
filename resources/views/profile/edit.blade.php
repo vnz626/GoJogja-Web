@@ -1,3 +1,39 @@
+<x-app-layout>
+
+    @section('title', 'Edit Profil')
+    @section('content')
+
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Profile') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('profile.partials.update-profile-information-form')
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('profile.partials.update-password-form')
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('profile.partials.delete-user-form')
+                </div>
+            </div>
+        </div>
+    </div>
+    @endsection
+</x-app-layout>
+
+{{--
 @extends('layouts.app')
 
 @section('title', 'Edit Profil')
@@ -10,9 +46,9 @@
 <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="flex flex-col items-center mb-6">
-        <img class="w-32 h-32 rounded-full object-cover border-4 border-custom-blue mb-4" 
+        <img class="w-32 h-32 rounded-full object-cover border-4 border-custom-blue mb-4"
              id="profile_photo_preview"
-             src="{{ Auth::user()->profile_photo_path ? asset('storage/' . Auth::user()->profile_photo_path) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=518EF8&color=fff' }}" 
+             src="{{ Auth::user()->profile_photo_path ? asset('storage/' . Auth::user()->profile_photo_path) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=518EF8&color=fff' }}"
              alt="Foto Profil">
         <label for="profile_photo" class="cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded">
             Ganti Foto
@@ -48,7 +84,7 @@
         <input type="date" name="date_of_birth" id="date_of_birth" value="{{ old('date_of_birth', Auth::user()->date_of_birth) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('date_of_birth') border-red-500 @enderror">
         @error('date_of_birth') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
     </div>
-    
+
     <hr class="my-6 border-gray-300">
     <h2 class="text-xl font-bold text-gray-800 mb-4">Ganti Password</h2>
     <p class="text-sm text-gray-500 mb-4">Kosongkan jika tidak ingin mengganti password.</p>
@@ -69,7 +105,7 @@
         <label for="password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">Konfirmasi Password Baru</label>
         <input type="password" name="password_confirmation" id="password_confirmation" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ketik ulang password baru Anda">
     </div>
-    
+
     <div class="flex items-center justify-end gap-4 mt-8">
         <a href="{{ route('profile.show') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             Batal
@@ -81,4 +117,4 @@
 </form>
     </div>
 </div>
-@endsection
+@endsection --}}

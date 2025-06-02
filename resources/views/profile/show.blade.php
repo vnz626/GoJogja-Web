@@ -14,8 +14,8 @@
         @endif
 
         <div class="flex flex-col items-center">
-            <img class="w-32 h-32 rounded-full object-cover border-4 border-custom-blue mb-4" 
-                 src="{{ Auth::user()->profile_photo_path ? asset('storage/' . Auth::user()->profile_photo_path) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=518EF8&color=fff' }}" 
+            <img class="w-32 h-32 rounded-full object-cover border-4 border-custom-blue mb-4"
+                 src="{{ Auth::user()->profile_photo_path ? asset('storage/' . Auth::user()->profile_photo_path) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=518EF8&color=fff' }}"
                  alt="Foto Profil">
 
             <div class="w-full mt-6">

@@ -49,7 +49,7 @@ class AuthController extends Controller
         Auth::login($user);
 
         // 4. Redirect ke halaman utama
-        return redirect('/');
+        return redirect()->intended('/');
     }
 
     /**
@@ -86,6 +86,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->instended('/');
     }
 }

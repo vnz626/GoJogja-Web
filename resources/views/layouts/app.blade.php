@@ -1,3 +1,40 @@
+{{-- <!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>{{ config('app.name', 'Laravel') }}</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100">
+            @include('layouts.navigation')
+
+            <!-- Page Heading -->
+            @isset($header)
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endisset
+
+            <!-- Page Content -->
+            <main>
+                {{ $slot }}
+            </main>
+        </div>
+    </body>
+</html> --}}
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -70,6 +107,7 @@
             @yield('content')
         </main>
 
+<<<<<<< HEAD
         <footer class="relative text-white pt-20 pb-8 overflow-hidden mt-12">
             <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/footer-background.webp');"></div>
             <div class="absolute inset-0 bg-overlay-blue opacity-80 z-1"></div>
@@ -81,6 +119,13 @@
                 <div class="text-center text-gray-200 mt-20"><p class="font-bold">gojogja.com</p><p class="text-sm text-gray-300">Copyright © 2025 gojogja.com</p></div>
             </div>
         </footer>
+=======
+
+        <footer class="bg-gray-200 text-center p-4 mt-auto">
+            <p class="text-gray-600">&copy; {{ date('Y') }} GoJogja. All Rights Reserved.</p>
+        </footer>
+
+>>>>>>> a6cfbb8cb6b79a2ea9af5b21cae3b7852cdac804
     </div>
 </body>
 </html>
