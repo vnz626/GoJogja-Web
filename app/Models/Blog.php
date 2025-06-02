@@ -20,4 +20,9 @@ class Blog extends Model
     {
         return $this->belongsTo(User::class);
     }
+    // Relasi: Blog memiliki banyak Gambar
+    public function images()
+    {
+        return $this->hasMany(BlogImage::class);
+    }
 }

@@ -1,97 +1,105 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Blog;
+use App\Models\BlogImage;
 use Illuminate\Http\Request;
-use App\Models\Blog; // Pastikan model Post sudah ada
+use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller
 {
-    // Method blog() yang diminta route
-    public function index()
-    {
-        // Misalnya tampilkan view bernama 'blog'
-        $blogs = Blog::with('user')->latest()->get();
-        return view('blog-wisata.index', compact('blogs'));
+    // Tampilkan semua blog milik user terlogin
+    public function index() {
+        $blogs = Blog::where('user_id', Auth::id())->get();
+        return view('blogs.index', compact('blogs'));
     }
 
-    // Method untuk menampilkan detail blog
-    public function show($id)
-    {
-        // Misalnya tampilkan view bernama 'blog-detail' dengan data blog tertentu
-        $blog = Blog::with('user')->findOrFail($id);
-        return view('blog-wisata.detail', compact('blog'));
+    // Form untuk membuat blog baru
+    public function create() {
+        return view('blogs.create');
     }
-    // Method untuk menampilkan form tambah blog
-    public function create()
-    {
-        // Misalnya tampilkan view bernama 'blog-create'
-        return view('blog-wisata.create');
-    }
-    // Method untuk menyimpan blog baru
-    public function store(Request $request)
-    {
-        // Validasi dan simpan data blog baru
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
+
+    // Simpan blog baru
+    public function store(Request $request) {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
             'content' => 'required',
+            'kategori' => 'required',
+            'subkategori' => 'required',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/avi,video/mpeg',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048'
+        ]);
+        $data['user_id'] = Auth::id();
+
+        // Simpan video jika ada
+        if ($request->hasFile('video')) {
+            $data['video_path'] = $request->file('video')->store('blog_videos','public');
+        }
+
+        // Simpan data blog
+        $blog = Blog::create($data);
+
+        // Simpan setiap gambar yang diupload
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('blog_images','public');
+                BlogImage::create([
+                    'blog_id' => $blog->id,
+                    'filename' => $path
+                ]);
+            }
+        }
+
+        return redirect()->route('blogs.index')->with('success', 'Blog berhasil dibuat.');
+    }
+
+    // Tampilkan halaman detail blog
+    public function show(Blog $blog) {
+        // Pastikan user hanya bisa lihat miliknya sendiri (opsional)
+        return view('blogs.show', compact('blog'));
+    }
+
+    // Form edit blog
+    public function edit(Blog $blog) {
+        return view('blogs.edit', compact('blog'));
+    }
+
+    // Update data blog
+    public function update(Request $request, Blog $blog) {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required',
+            'kategori' => 'required',
+            'subkategori' => 'required',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/avi,video/mpeg',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        // Simpan data ke database (logika penyimpanan tergantung pada model yang digunakan)
-        // Blog::create($validatedData);
+        if ($request->hasFile('video')) {
+            // Hapus video lama jika perlu
+            $data['video_path'] = $request->file('video')->store('blog_videos','public');
+        }
 
-        // Redirect atau tampilkan pesan sukses
-        return redirect()->route('blog.index')->with('success', 'Blog created successfully!');
-    }
-    // Method untuk menampilkan form edit blog
-    public function edit($id)
-    {
-        // Misalnya tampilkan view bernama 'blog-edit' dengan data blog tertentu
-        return view('blog-wisata.edit', ['id' => $id]);
-    }
-    // Method untuk memperbarui blog
-    public function update(Request $request, $id)
-    {
-        // Validasi dan update data blog
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-        ]);
+        $blog->update($data);
 
-        // Update data ke database (logika pembaruan tergantung pada model yang digunakan)
-        // Blog::findOrFail($id)->update($validatedData);
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('blog_images','public');
+                BlogImage::create([
+                    'blog_id' => $blog->id,
+                    'filename' => $path
+                ]);
+            }
+        }
 
-        // Redirect atau tampilkan pesan sukses
-        return redirect()->route('blog.index')->with('success', 'Blog updated successfully!');
+        return redirect()->route('blogs.show', $blog)->with('success', 'Blog berhasil diperbarui.');
     }
-    // Method untuk menghapus blog
-    public function destroy($id)
-    {
-        // Hapus data blog dari database (logika penghapusan tergantung pada model yang digunakan)
-        // Blog::destroy($id);
 
-        // Redirect atau tampilkan pesan sukses
-        return redirect()->route('blog.index')->with('success', 'Blog deleted successfully!');
-    }
-    // Method untuk menampilkan halaman kategori blog
-    public function category($category)
-    {
-        // Misalnya tampilkan view bernama 'blog-category' dengan data kategori tertentu
-        return view('blog-wisata.category', ['category' => $category]);
-    }
-    // Method untuk menampilkan halaman tag blog
-    public function tag($tag)
-    {
-        // Misalnya tampilkan view bernama 'blog-tag' dengan data tag tertentu
-        return view('blog-wisata.tag', ['tag' => $tag]);
-    }
-    // Method untuk menampilkan halaman pencarian blog
-    public function search(Request $request)
-    {
-        // Ambil query pencarian dari request
-        $query = $request->input('query');
-
-        // Misalnya tampilkan view bernama 'blog-search' dengan data pencarian
-        return view('blog-wisata.search', ['query' => $query]);
+    // Hapus blog (beserta gambar terkait)
+    public function destroy(Blog $blog) {
+        $blog->images()->delete(); // hapus gambar di DB
+        $blog->delete();
+        return redirect()->route('blogs.index')->with('success', 'Blog berhasil dihapus.');
     }
 }
+

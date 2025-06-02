@@ -1,11 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RentalController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminBlogController;
 use App\Http\Controllers\TourPackageController; // <-- Tambahkan ini
 
 // Rute Halaman Utama
@@ -32,4 +33,11 @@ Route::get('/rental-kendaraan', [RentalController::class, 'index'])->name('renta
 Route::get('/paket-wisata', [TourPackageController::class, 'index'])->name('paket-wisata.index');
 
 // Rute untuk halaman lainnya
-Route::get('/blog-wisata', [BlogController::class, 'index'])->name('blog-wisata.index');
+Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
+
+// Route grup untuk User (tidak perlu prefix khusus)
+Route::resource('blogs', BlogController::class);
+// Route grup untuk Admin dengan prefix 'admin' dan namespace controller AdminBlogController
+Route::prefix('admin')->group(function () {
+    Route::get('/blogs', [AdminBlogController::class, 'index'])->name('admin.blogs.index');
+});

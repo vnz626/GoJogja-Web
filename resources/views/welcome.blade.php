@@ -42,7 +42,7 @@
                     <a href="/" class="text-white font-medium">Home</a>
                     <a href="{{ route('paket-wisata.index') }}" class="text-white font-medium">Wisata Jogja</a>
                     <a href="{{ route('rental.index') }}" class="text-white font-medium">Rental Kendaraan</a>
-                    <a href="{{ route('blog-wisata.index') }}" class="text-white font-medium">Blog Wisata</a>
+                    <a href="{{ route('blogs.index') }}" class="text-white font-medium">Blog Wisata</a>
                 </nav>
                 <div class="flex items-center gap-4">
                     @auth

@@ -11,17 +11,17 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: { sans: ['Poppins', 'sans-serif'] },
-            colors: {
-              'custom-blue': '#518EF8',
-              'overlay-blue': '#6DC3F5' // Warna ini akan dipakai header
+        tailwind.config = {
+            theme: {
+            extend: {
+                fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                colors: {
+                'custom-blue': '#518EF8',
+                'overlay-blue': '#6DC3F5' // Warna ini akan dipakai header
+                }
             }
-          }
-        }
-      }
+            }
+        };
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
@@ -35,7 +35,7 @@
                     <a href="/" class="font-medium">Home</a>
                     <a href="{{ route('paket-wisata.index') }}" class="font-medium hover:text-gray-200">Wisata Jogja</a>
                     <a href="{{ route('rental.index') }}" class="font-medium">Rental Kendaraan</a>
-                    <a href="{{ route('blog-wisata.index') }}" class="font-medium">Blog Wisata</a>
+                    <a href="{{ route('blogs.index') }}" class="font-medium">Blog Wisata</a>
                 </nav>
                 <div class="flex items-center gap-4">
                     @auth
