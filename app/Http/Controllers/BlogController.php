@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Blog;
 use App\Models\BlogImage;
 use Illuminate\Http\Request;
@@ -9,8 +10,30 @@ use Illuminate\Support\Facades\Auth;
 class BlogController extends Controller
 {
     // Tampilkan semua blog milik user terlogin
-    public function index() {
+    public function index(Request $request) {
         $blogs = Blog::where('user_id', Auth::id())->get();
+
+            $query = Blog::query();
+
+        if ($request->has('sort')) {
+            if ($request->sort === 'newest') {
+                $query->orderBy('created_at', 'desc');
+            } elseif ($request->sort === 'cheapest') {
+                $query->orderBy('price', 'asc');
+            }
+            // Tambahkan lainnya sesuai kebutuhan
+        }
+
+        if ($request->has('category')) {
+            $query->where('category', $request->category);
+        }
+
+        if ($request->has('subcategory')) {
+            $query->where('subcategory', $request->subcategory);
+        }
+
+        $blogs = $query->get();
+
         return view('blogs.index', compact('blogs'));
     }
 

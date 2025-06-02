@@ -22,9 +22,12 @@ return new class extends Migration
             $table->string('slug')->unique()->nullable(); // Tambahkan kolom slug untuk SEO
             $table->string('kategori'); // Tambahkan kolom kategori untuk klasifikasi blog
             $table->string('sub_kategori')->nullable(); // Tambahkan kolom sub_kategori untuk klasifikasi blog
+
             // $table->string('status')->default('draft'); // Tambahkan kolom status untuk mengelola status blog (draft, published, etc.)
             // $table->dateTime('published_at')->nullable(); // Tambahkan kolom published_at untuk tanggal publikasi
 
+            //user_id
+            // Tambahkan kolom user_id untuk mengaitkan blog dengan pengguna
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 

@@ -44,4 +44,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/blogs', [AdminBlogController::class, 'index'])->name('admin.blogs.index');
 });
 
+Route::prefix('admin')->middleware('auth','admin')->group(function () {
+    Route::get('blogs', [AdminBlogController::class,'index'])->name('admin.blogs.index');
+});
+
+
 require __DIR__.'/auth.php';

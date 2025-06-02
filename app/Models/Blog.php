@@ -13,7 +13,7 @@ class Blog extends Model
     protected $table = 'blogs';
 
     // Kolom yang dapat diisi secara massal
-    protected $fillable = ['title','content','image','user_id'];
+    protected $fillable = ['title','content','kategori','sub_kategori','image','user_id'];
 
     // Relasi: Blog dimiliki oleh User
     public function user()
