@@ -5,7 +5,7 @@
 
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('Profile') }}
+        {{ __('Profile') }} {{-- {{ Auth::user()->name }} --}}
     </h2>
 </x-slot>
 
@@ -20,6 +20,26 @@
         <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
             <div class="max-w-xl">
                 @include('profile.partials.update-password-form')
+            </div>
+        </div>
+
+        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="max-w-xl">
+                <header>
+                    <h2 class="text-lg font-medium text-gray-900">
+                        {{ __('Kembali ke Halaman Profil') }}
+                    </h2>
+
+                    <p class="mt-1 text-sm text-gray-600">
+                        {{ __('Tidak ada perubahan yang dilakukan.') }}
+                    </p>
+                </header>
+
+            </div>
+            <div class="mt-6 flex justify-end">
+                <a href="{{ route('profile.show') }}" class="mt-6 w-full text-center bg-custom-blue text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
+                    Kembali ke Profil
+                </a>
             </div>
         </div>
 
@@ -91,15 +111,15 @@
 
     <div class="mb-4">
         <label for="current_password" class="block text-gray-700 text-sm font-bold mb-2">Password Saat Ini</label>
-        <input type="password" name="current_password" id="current_password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('current_password') border-red-500 @enderror" placeholder="Masukkan password Anda saat ini">
+       <input type="password" name="current_password" id="current_password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('current_password') border-red-500 @enderror" placeholder="Masukkan password Anda saat ini">
         @error('current_password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
     </div>
 
-    <div class="mb-4">
+    <d iv class="mb-4">
         <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password Baru</label>
         <input type="password" name="password" id="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('password') border-red-500 @enderror" placeholder="Minimal 8 karakter">
         @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-    </div>
+    </d>
 
     <div class="mb-6">
         <label for="password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">Konfirmasi Password Baru</label>

@@ -24,7 +24,10 @@ public function up(): void
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn('profile_photo_path');
+            $table->dropColumn('gender');
+            $table->dropColumn('date_of_birth');
         });
     }
+
 };
