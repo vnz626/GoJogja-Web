@@ -75,7 +75,7 @@
         <section class="bg-gray-100 py-8">
             <div class="container mx-auto px-4">
 
-                <form method="GET" action="{{ route('rental.index') }}" class="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-10">
+                <form method="GET" action="{{ route('rental.index') }}" id="filterForm" class="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-10">
                     <div class="md:col-span-2">
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Kendaraan</label>
                         <input type="text" name="search" id="search" value="{{ $searchTerm ?? '' }}" placeholder="Contoh: Avanza, Vario..." class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue">
@@ -154,5 +154,26 @@
             </div>
         </footer>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterForm = document.getElementById('filterForm');
+            const scrollPositionKey = 'scrollPosition-' + window.location.pathname;
+
+            if (filterForm) {
+                filterForm.addEventListener('submit', function() {
+                    sessionStorage.setItem(scrollPositionKey, window.scrollY);
+                });
+            }
+
+            const storedScrollPosition = sessionStorage.getItem(scrollPositionKey);
+            if (storedScrollPosition) {
+                setTimeout(() => {
+                    window.scrollTo(0, parseInt(storedScrollPosition, 10));
+                    sessionStorage.removeItem(scrollPositionKey);
+                }, 20);
+            }
+        });
+    </script>
+
 </body>
 </html>

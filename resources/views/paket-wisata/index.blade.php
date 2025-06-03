@@ -77,7 +77,7 @@
                     </a>
                 </div>
 
-                <form method="GET" action="{{ route('paket-wisata.index') }}" class="bg-white p-6 rounded-lg shadow-md mb-10">
+                <form method="GET" action="{{ route('paket-wisata.index') }}" id="filterForm" class="bg-white p-6 rounded-lg shadow-md mb-10">
                     <input type="hidden" name="view_mode" value="{{ $currentFilters['view_mode'] }}">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
                         <div class="md:col-span-4 lg:col-span-2">
@@ -209,5 +209,25 @@
             </div>
         </footer>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterForm = document.getElementById('filterForm');
+            const scrollPositionKey = 'scrollPosition-' + window.location.pathname;
+
+            if (filterForm) {
+                filterForm.addEventListener('submit', function() {
+                    sessionStorage.setItem(scrollPositionKey, window.scrollY);
+                });
+            }
+
+            const storedScrollPosition = sessionStorage.getItem(scrollPositionKey);
+            if (storedScrollPosition) {
+                setTimeout(() => {
+                    window.scrollTo(0, parseInt(storedScrollPosition, 10));
+                    sessionStorage.removeItem(scrollPositionKey);
+                }, 20);
+            }
+        });
+    </script>
 </body>
 </html>
