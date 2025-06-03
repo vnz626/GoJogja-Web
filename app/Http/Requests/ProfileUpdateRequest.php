@@ -30,10 +30,10 @@ class ProfileUpdateRequest extends FormRequest
                 'email',
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
-            'gender' => ['nullable', 'in:male,female'],
+            ],
+            'gender' => ['nullable', 'in:Laki-laki,Perempuan'],
             'date_of_birth' => ['nullable', 'date'],
             'profile_photo' => ['nullable', 'image', 'max:2048'], // max 2MB
-            ],
         ];
     }
 }

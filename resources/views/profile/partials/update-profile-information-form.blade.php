@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6"  enctype="multipart/form-data">
         @csrf
         @method('patch')
 
@@ -21,7 +21,7 @@
         <div class="flex items-center gap-4">
             <div class="flex-shrink-0">
                 <img class="w-12 h-12 rounded-full object-cover border-2 border-custom-blue"
-                     src="{{ $user->profile_photo_url }}"
+                     src="{{ asset('storage/' . $user->profile_photo_path) }}"
                      alt="{{ $user->name }}">
             </div>
 
