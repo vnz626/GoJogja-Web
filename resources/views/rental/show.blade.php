@@ -6,7 +6,7 @@
     <section class="relative text-white">
         <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/rental-hero-bg.jpeg');"></div>
         <div class="absolute inset-0 bg-overlay-blue opacity-70 z-1"></div>
-        
+
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-32 pb-16 md:pt-40 md:pb-20 text-center md:text-left">
             <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold header-text-shadow">{{ $vehicle['name'] ?? 'Nama Kendaraan' }}</h1>
             <p class="text-xl md:text-2xl text-gray-200 header-text-shadow mt-2">{{ $vehicle['type'] ?? 'Tipe Kendaraan' }}</p>
@@ -15,12 +15,14 @@
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="bg-white p-6 sm:p-8 rounded-lg shadow-xl flex flex-col lg:flex-row gap-8 mt-[-4rem] relative z-20">
-            
+
+            {{-- Konten Kiri --}}
             <div class="lg:w-2/3">
                 <div class="mb-6 rounded-lg overflow-hidden shadow-md">
                     <img src="{{ $vehicle['image_url'] ?? '/images/rental/default-car.png' }}" alt="{{ $vehicle['name'] ?? 'Gambar Kendaraan' }}" id="mainVehicleImage" class="w-full h-auto max-h-[450px] object-contain">
                 </div>
 
+                {{-- Galeri Foto --}}
                 @if(isset($vehicle['images']) && count($vehicle['images']) > 0)
                 <div class="mb-8">
                     <h3 class="text-xl font-semibold text-gray-800 mb-3">Galeri Foto</h3>
@@ -56,8 +58,8 @@
             </div>
 
             <div class="lg:w-1/3">
-                <div class="sticky top-28"> 
-                    <div 
+                <div class="sticky top-28">
+                    <div
                         class="bg-gray-50 p-6 rounded-lg shadow-lg"
                         x-data="{
                             basePrice: {{ $vehicle['price_per_day'] ?? 0 }},
@@ -86,7 +88,7 @@
                             <div class="flex justify-between border-b pb-2"><span class="font-semibold">Transmisi:</span><span>{{ $vehicle['transmisi'] ?? 'N/A' }}</span></div>
                              <div class="flex justify-between"><span class="font-semibold">Bahan Bakar:</span><span>{{ $vehicle['bahan_bakar'] ?? 'N/A' }}</span></div>
                         </div>
-                        
+
                         <div class="mb-6">
                             <p class="text-3xl font-bold text-custom-blue text-center">
                                 Rp <span x-text="totalCost.toLocaleString('id-ID')"></span>

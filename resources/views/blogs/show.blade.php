@@ -16,7 +16,7 @@
 </section>
 
 {{-- Konten --}}
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-0">
     <div class="bg-white p-6 sm:p-8 rounded-lg shadow-xl flex flex-col lg:flex-row gap-8 mt-[-4rem] relative z-20">
 
         {{-- Konten Kiri --}}
@@ -45,18 +45,18 @@
             @endif
 
             {{-- Video --}}
-            @if($blog->video_path)
+            @if($blog->video)
             <div class="mb-6">
                 <h3 class="text-xl font-semibold text-gray-800 mb-3">Video</h3>
                 <video controls class="w-full rounded shadow">
-                    <source src="{{ asset('storage/' . $blog->video_path) }}" type="video/mp4">
+                    <source src="{{ asset('storage/' . $blog->video) }}" type="video/mp4">
                     Browser Anda tidak mendukung tag video.
                 </video>
             </div>
             @endif
 
             {{-- Isi Konten --}}
-            <h2 class="text-2xl font-bold text-gray-800 mb-3">Isi Konten</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-3">Deskripsi</h2>
             <article class="prose max-w-none text-gray-600 leading-relaxed mb-6">
                 {!! nl2br(e($blog->content)) !!}
             </article>
@@ -80,6 +80,16 @@
                 <p><strong>Dibuat:</strong> {{ \Carbon\Carbon::parse($blog->created_at)->translatedFormat('d M Y') }}</p>
                 <p><strong>Penulis:</strong> {{ $blog->user->name }}</p>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="p-3 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div class="flex justify-end">
+            <a href="{{ route('blogs.index') }}" class="mt-6 w-full text-center bg-custom-blue text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
+                Kembali ke Blog
+            </a>
         </div>
     </div>
 </div>

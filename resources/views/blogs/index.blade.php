@@ -18,7 +18,7 @@
     {{-- section search --}}
     <section class="bg-gray-100 py-8">
         <div class="container mx-auto px-4">
-            <form method="GET" action="{{ route('blogs.index') }}" class="bg-white p-6 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
+            <form method="GET" action="{{ route('blogs.index') }}" id="filterForm" class="bg-white p-6 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
                 <div class="md:col-span-3 lg:col-span-2">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                     <input type="text" name="search" id="search" value="{{ $searchTerm ?? '' }}" placeholder="Cari judul atau isi artikel..." class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue">
@@ -73,6 +73,7 @@
                 @endauth
             </div>
 
+            {{-- Jika tidak ada blog yang ditemukan --}}
             @if(!isset($blogs) || $blogs->isEmpty())
                 <div class="text-center py-12 bg-white rounded-lg shadow-md">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
@@ -82,12 +83,24 @@
                     <p class="text-gray-400 mt-2">Coba ubah filter atau kata kunci pencarian Anda.</p>
                 </div>
             @else
+                {{-- Jika ada blog yang ditemukan --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach($blogs as $blog)
                         <article class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                            {{-- Thumbnail --}}
                             <a href="{{ route('blogs.show', $blog) }}">
-                                 <img src="{{ $blog->image_url ?? ($blog->images && $blog->images->first() ? asset('storage/' . $blog->images->first()->filename) : '/images/blog/default.jpg') }}" alt="{{ $blog->title }}" class="w-full h-56 object-cover">
+                                @if($blog->video)
+                                    <video controls class="w-full rounded shadow" poster="{{ asset('images/video-thumbnail.jpg') }}">
+                                        <source src="{{ asset('storage/' . $blog->video) }}" type="video/mp4">
+                                        Browser Anda tidak mendukung tag video.
+                                    </video>
+                                @elseif($blog->images && $blog->images->first())
+                                    <img src="{{ asset('storage/' . $blog->images->first()->filename) }}" alt="{{ $blog->title }}" class="w-full h-56 object-cover">
+                                @else
+                                    <img src="/images/blog/default.jpg" alt="{{ $blog->title }}" class="w-full h-56 object-cover">
+                                @endif
                             </a>
+                            {{-- Konten --}}
                             <div class="p-6 flex flex-col flex-grow">
                                 <div class="mb-3">
                                     <span class="inline-block bg-custom-blue text-white text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide">{{ $blog->kategori }}</span>
@@ -118,4 +131,25 @@
             @endif
         </div>
     </section>
+
 @endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterForm = document.getElementById('filterForm');
+        const scrollPositionKey = 'scrollPosition-' + window.location.pathname;
+
+        if (filterForm) {
+            filterForm.addEventListener('submit', function() {
+                sessionStorage.setItem(scrollPositionKey, window.scrollY);
+            });
+        }
+
+        const storedScrollPosition = sessionStorage.getItem(scrollPositionKey);
+        if (storedScrollPosition) {
+            setTimeout(() => {
+                window.scrollTo(0, parseInt(storedScrollPosition, 10));
+                sessionStorage.removeItem(scrollPositionKey);Add commentMore actions
+            }, 20);
+        }
+    });
+</script>

@@ -115,10 +115,12 @@ class BlogController extends Controller
 
         // Simpan video jika ada
         if ($request->hasFile('video')) {
-            $data['video_path'] = $request->file('video')->store('blog_videos', 'public');
+            $data['video'] = $request->file('video')->store('blog_videos', 'public');
         }
 
         // Simpan data blog
+        $data['subkategori'] = $request->input('subkategori');
+        unset($data['subkategori']);
         $blog = Blog::create($data);
 
         // Simpan setiap gambar yang diupload
@@ -143,7 +145,7 @@ class BlogController extends Controller
     {
         // Jika Anda ingin relasi 'images' dan 'user' ikut terbawa:
         // $blog->load('images', 'user');
-        return view('blogs.show', compact('blog'));
+        return view('blogs.show', ['blog' => $blog->load('images')]);
     }
 
     /**
@@ -186,11 +188,15 @@ class BlogController extends Controller
         // Simpan video baru jika ada
         if ($request->hasFile('video')) {
             // Hapus video lama jika ada
-            if ($blog->video_path) {
-                Storage::disk('public')->delete($blog->video_path);
+            if ($blog->video) {
+                Storage::disk('public')->delete($blog->video);
             }
-            $data['video_path'] = $request->file('video')->store('blog_videos', 'public');
+            $data['video'] = $request->file('video')->store('blog_videos', 'public');
         }
+
+        // Update kategori dan subkategori
+        $data['sub_kategori'] = $request->input('subkategori');
+        unset($data['subkategori']);
 
         $blog->update($data);
 
@@ -227,8 +233,8 @@ class BlogController extends Controller
             }
         }
         // Hapus file video terkait dari storage
-        if ($blog->video_path) {
-            Storage::disk('public')->delete($blog->video_path);
+        if ($blog->video) {
+            Storage::disk('public')->delete($blog->video);
         }
 
         // Hapus record gambar dari tabel blog_images (jika relasi di-setup dengan onDelete cascade, ini otomatis)

@@ -7,7 +7,7 @@
         <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/blog-hero-bg.jpg');"></div>
         <div class="absolute inset-0 bg-overlay-blue opacity-60 z-1"></div>
         <div class="relative z-10 text-center p-4">
-            <h1 class="text-5xl md:text-7xl font-bold mb-3 header-text-shadow">Blog</h1>
+            <h1 class="text-5xl md:text-7xl font-bold mb-3 header-text-shadow">Buat Blog</h1>
             <p class="text-xl md:text-2xl max-w-2xl mx-auto header-text-shadow">
                 Buat Blog Kamu Sendiri
             </p>
