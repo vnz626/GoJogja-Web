@@ -3,6 +3,7 @@
 @section('title', 'Blog Wisata GoJogja')
 
 @section('content')
+    {{-- tampilan section  --}}
     <section class="relative h-screen flex items-center justify-center text-white">
         <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/blog-hero-bg.jpg');"></div>
         <div class="absolute inset-0 bg-overlay-blue opacity-60 z-1"></div>
@@ -14,6 +15,7 @@
         </div>
     </section>
 
+    {{-- section search --}}
     <section class="bg-gray-100 py-8">
         <div class="container mx-auto px-4">
             <form method="GET" action="{{ route('blogs.index') }}" class="bg-white p-6 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
@@ -53,6 +55,7 @@
         </div>
     </section>
 
+    {{-- section daftar blog --}}
     <section class="bg-gray-100 pt-4 pb-12">
         <div class="container mx-auto px-4">
             <div class="mb-8 flex flex-wrap">
