@@ -14,12 +14,13 @@ class AdminMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        // Cek jika user sudah login dan role-nya admin
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
-            abort(403); // Menolak akses jika bukan admin
+        if (Auth::check() && Auth::user()->role === 'admin') {
+            return $next($request);
         }
-        return $next($request);
+
+        // Bisa abort atau redirect, bebas sesuai kebutuhan
+        abort(403, 'Unauthorized Access');
     }
 }

@@ -11,19 +11,19 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Poppins', 'sans-serif'],
-            },
-            colors: {
-              'custom-blue': '#518EF8',
-              'overlay-blue': '#6DC3F5',
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                    sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                    'custom-blue': '#518EF8',
+                    'overlay-blue': '#6DC3F5',
+                    }
+                }
             }
-          }
         }
-      }
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>

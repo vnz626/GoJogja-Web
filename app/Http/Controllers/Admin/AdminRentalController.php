@@ -1,19 +1,15 @@
 <?php
 
-// app/Http/Controllers/Admin/WisataController.php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AdminRental;
 use Illuminate\Http\Request;
 
 class AdminRentalController extends Controller
 {
     public function index()
     {
-        $rentals = AdminRental::all();
-        return view('admin.rental.index', compact('rentals'));
+        return view('admin.rental.index');
     }
 
     public function create()
@@ -23,35 +19,22 @@ class AdminRentalController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi dan simpan rental baru
-        $data = $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            // ...
-        ]);
-        AdminRental::create($data);
-        return redirect()->route('rental.index');
+        // Validasi dan simpan data rental
     }
 
-    public function edit(AdminRental $rental)
+    public function edit($id)
     {
-        return view('admin.rental.edit', compact('rental'));
+        // Tampilkan form edit data rental
+        return view('admin.rental.edit');
     }
 
-    public function update(Request $request, AdminRental $rental)
+    public function update(Request $request, $id)
     {
-        $data = $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            // ...
-        ]);
-        $rental->update($data);
-        return redirect()->route('rental.index');
+        // Validasi dan update data rental
     }
 
-    public function destroy(AdminRental $rental)
+    public function destroy($id)
     {
-        $rental->delete();
-        return redirect()->route('rental.index');
+        // Hapus data rental
     }
 }
