@@ -6,6 +6,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\TourPackageController;
 use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\AdminRentalController;
@@ -59,7 +60,9 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/blogs', [AdminBlogController::class, 'index'])->name('admin.blogs.index');
 
     // CRUD Wisata
-    Route::resource('/wisata', AdminWisataController::class)->names([
+    Route::resource('destinations', DestinationController::class)
+        ->except(['show'])
+        ->names([
         'index' => 'admin.wisata.index',
         'create' => 'admin.wisata.create',
         'store' => 'admin.wisata.store',
@@ -68,15 +71,21 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         'destroy' => 'admin.wisata.destroy',
     ]);
 
-    // CRUD Rental
-    Route::resource('/rental', AdminRentalController::class)->names([
-        'index' => 'admin.rental.index',
-        'create' => 'admin.rental.create',
-        'store' => 'admin.rental.store',
-        'edit' => 'admin.rental.edit',
-        'update' => 'admin.rental.update',
-        'destroy' => 'admin.rental.destroy',
-    ]);
+    // // CRUD Rental eror ketikka di upcommen si user tidak bisa lihat detail
+    // Route::resource('rental', AdminRentalController::class)->names([
+    //     'index' => 'admin.rental.index',
+    //     'create' => 'admin.rental.create',
+    //     'store' => 'admin.rental.store',
+    //     'edit' => 'admin.rental.edit',
+    //     'update' => 'admin.rental.update',
+    //     'destroy' => 'admin.rental.destroy',
+    //     'show' => 'admin.rental.show',
+    // ]);
+
+    Route::get('/admin/get-subcategories/{categoryId}', [AdminWisataController::class, 'getSubcategories']);
+
+    // Route::resource('destinations', DestinationController::class)
+    //     ->except(['show']);
 });
 
 require __DIR__.'/auth.php';
