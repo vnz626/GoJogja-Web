@@ -6,20 +6,26 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AdminBlogController;
-use App\Http\Controllers\TourPackageController; // <-- Tambahkan ini
+use App\Http\Controllers\TourPackageController;
+use App\Http\Controllers\Admin\AdminBlogController;
+use App\Http\Controllers\Admin\AdminRentalController;
+use App\Http\Controllers\Admin\AdminWisataController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 
-// Rute Halaman Utama
+// =========================
+// 🔷 ROUTE UTAMA (UMUM)
+// =========================
 Route::get('/', [HomeController::class, 'index']);
 
-// Rute Autentikasi
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Rute Profil (dilindungi middleware 'auth')
+// =========================
+// 🔒 ROUTE USER (AUTH USER BIASA)
+// =========================
 Route::middleware('auth')->group(function () {
     Route::get('/profil', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profil/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -29,25 +35,48 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profil', [ProfileController::class, 'update'])->name('profile.update');
 });
 
-// Rute Rental Kendaraan
+// =========================
+// 🚗 RENTAL & WISATA
+// =========================
 Route::get('/rental-kendaraan', [RentalController::class, 'index'])->name('rental.index');
-Route::get('/rental-kendaraan/{idOrSlug}', [RentalController::class, 'show'])->name('rental.show'); // idOrSlug
+Route::get('/rental-kendaraan/{idOrSlug}', [RentalController::class, 'show'])->name('rental.show');
 
-// Rute Paket Wisata <-- Tambahkan ini
 Route::get('/paket-wisata', [TourPackageController::class, 'index'])->name('paket-wisata.index');
 
-// Rute untuk halaman lainnya
-Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
+// =========================
+// 📖 BLOG (UNTUK USER)
+// =========================
 Route::resource('blogs', BlogController::class);
 
-// Route grup untuk Admin dengan prefix 'admin' dan namespace controller AdminBlogController
-Route::prefix('admin')->group(function () {
+// =========================
+// 🛠️ ADMIN ROUTES
+// =========================
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    // Dashboard Admin
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+    // Blog khusus admin
     Route::get('/blogs', [AdminBlogController::class, 'index'])->name('admin.blogs.index');
-});
 
-Route::prefix('admin')->middleware('auth','admin')->group(function () {
-    Route::get('blogs', [AdminBlogController::class,'index'])->name('admin.blogs.index');
-});
+    // CRUD Wisata
+    Route::resource('/wisata', AdminWisataController::class)->names([
+        'index' => 'admin.wisata.index',
+        'create' => 'admin.wisata.create',
+        'store' => 'admin.wisata.store',
+        'edit' => 'admin.wisata.edit',
+        'update' => 'admin.wisata.update',
+        'destroy' => 'admin.wisata.destroy',
+    ]);
 
+    // CRUD Rental
+    Route::resource('/rental', AdminRentalController::class)->names([
+        'index' => 'admin.rental.index',
+        'create' => 'admin.rental.create',
+        'store' => 'admin.rental.store',
+        'edit' => 'admin.rental.edit',
+        'update' => 'admin.rental.update',
+        'destroy' => 'admin.rental.destroy',
+    ]);
+});
 
 require __DIR__.'/auth.php';
