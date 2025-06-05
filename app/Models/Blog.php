@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+// use App\Models\User; // Tidak perlu di-import jika sudah di-resolve oleh Laravel
 
 class Blog extends Model
 {
@@ -14,16 +12,24 @@ class Blog extends Model
 
     protected $table = 'blogs';
 
-    // Kolom yang dapat diisi secara massal
-    protected $fillable = ['title','content','kategori','subkategori','video','image','user_id'];
+    // PERBARUI BAGIAN INI
+    protected $fillable = [
+        'user_id',
+        'title',
+        'slug', // Tambahkan slug
+        'content',
+        'kategori',
+        'sub_kategori', // Tambahkan sub_kategori
+        'video_path',   // Ganti 'video' atau 'image' dengan 'video_path' jika itu nama kolomnya
+        // 'image', // Hapus atau sesuaikan jika Anda menggunakan BlogImage untuk semua gambar
+    ];
 
-    // Relasi: Blog dimiliki oleh User
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
-    // Relasi: Blog memiliki banyak Gambar
-    public function images(): HasMany
+
+    public function images()
     {
         return $this->hasMany(BlogImage::class);
     }
