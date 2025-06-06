@@ -1,114 +1,120 @@
 @extends('layouts.app')
-@section('title', 'Buat Blog')
+
+@section('title', 'Tulis Artikel Blog Baru')
 
 @section('content')
-{{-- tampilan section  --}}
-    <section class="relative h-screen flex items-center justify-center text-white">
+    <section class="relative text-white">
         <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/blog-hero-bg.jpg');"></div>
-        <div class="absolute inset-0 bg-overlay-blue opacity-60 z-1"></div>
-        <div class="relative z-10 text-center p-4">
-            <h1 class="text-5xl md:text-7xl font-bold mb-3 header-text-shadow">Buat Blog</h1>
-            <p class="text-xl md:text-2xl max-w-2xl mx-auto header-text-shadow">
-                Buat Blog Kamu Sendiri
-            </p>
+        <div class="absolute inset-0 bg-overlay-blue opacity-70 z-1"></div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-32 pb-16 md:pt-40 md:pb-20">
+            <h1 class="text-4xl sm:text-5xl font-bold header-text-shadow">Tulis Artikel Baru</h1>
+            <p class="text-lg md:text-xl text-gray-200 header-text-shadow mt-2">Bagikan cerita dan pengalamanmu tentang Yogyakarta.</p>
         </div>
     </section>
 
-    <section class="bg-gray-100 pt-4 pb-12">
-        <div class="container mx-auto px-4">
-            <div class="mb-8 flex flex-wrap">
-                @auth
-                <a href="{{ route('blogs.index', ['user_articles' => Auth::id()]) }}"
-                   class="px-5 py-3 font-semibold whitespace-nowrap
-                          {{ request('user_articles') == Auth::id() ? 'border-b-2 border-custom-blue text-custom-blue' : 'text-gray-500 hover:text-custom-blue hover:border-custom-blue hover:border-b-2' }}">
-                    Artikel Saya
-                </a>
-                <a href="{{ route('blogs.create') }}"
-                   class="px-5 py-3 font-semibold whitespace-nowrap
-                          {{ request()->routeIs('blogs.create') ? 'border-b-2 border-custom-blue text-custom-blue' : 'text-gray-500 hover:text-custom-blue hover:border-custom-blue hover:border-b-2' }}">
-                    Tulis Artikel Baru
-                </a>
-                @endauth
-            </div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white p-6 sm:p-8 rounded-lg shadow-xl max-w-4xl mx-auto mt-[-6rem] relative z-20">
+            <form action="{{ route('blogs.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                @csrf
+                
+                <div>
+                    <label for="title" class="block text-sm font-bold text-gray-700 mb-1">Judul Artikel</label>
+                    <input type="text" name="title" id="title" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue" value="{{ old('title') }}" required placeholder="Contoh: 5 Tips Liburan Hemat di Jogja">
+                </div>
+                
+                <div>
+                    <label for="content" class="block text-sm font-bold text-gray-700 mb-1">Isi Konten</label>
+                    <textarea name="content" id="content" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue" rows="10" required placeholder="Tulis ceritamu di sini...">{{ old('content') }}</textarea>
+                </div>
 
-            <div  class="text-gray-700 py-12 bg-white rounded-lg shadow-md">
-               <form action="{{ route('blogs.store') }}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2 gap-6">
-                    @csrf
-
-                    {{-- Judul --}}
-                    <div class="md:col-span-2">
-                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
-                        <input type="text" name="title" id="title" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue" required>
-                    </div>
-
-                    {{-- Isi Konten --}}
-                    <div class="md:col-span-2">
-                        <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Isi Konten</label>
-                        <textarea name="content" id="content" rows="6" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue" required></textarea>
-                    </div>
-
-                    {{-- Kategori --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="kategori" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                        <label for="kategori" class="block text-sm font-bold text-gray-700 mb-1">Kategori</label>
                         <select name="kategori" id="kategori" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue" required>
-                            <option value="">Pilih Kategori</option>
-                            <option value="rental">Rental</option>
-                            <option value="paket wisata">Paket Wisata</option>
+                            <option value="" disabled selected>Pilih Kategori</option>
+                            <option value="Destinasi Populer">Destinasi Populer</option>
+                            <option value="Kuliner">Kuliner</option>
+                            <option value="Budaya">Budaya</option>
+                            <option value="Tips Perjalanan">Tips Perjalanan</option>
+                            <option value="Rental">Info Rental</option>
                         </select>
                     </div>
-
-                    {{-- Subkategori --}}
+                    
                     <div>
-                        <label for="subkategori" class="block text-sm font-medium text-gray-700 mb-1">Subkategori</label>
-                        <select name="subkategori" id="subkategori" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue" required>
-                            <option value="">Pilih Subkategori</option>
+                        <label for="subkategori" class="block text-sm font-bold text-gray-700 mb-1">Subkategori (Opsional)</label>
+                        <select name="subkategori" id="subkategori" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue" disabled>
+                            <option value="">Pilih Kategori Terlebih Dahulu</option>
                         </select>
                     </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Upload Gambar (bisa lebih dari satu, gambar pertama akan menjadi thumbnail)</label>
+                    <input type="file" name="images[]" id="images" accept="image/*" multiple class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Video (Opsional)</label>
+                    <input type="file" name="video" id="video" accept="video/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200">
+                </div>
 
-                    {{-- Video --}}
-                    <div class="md:col-span-2">
-                        <label for="video" class="block text-sm font-medium text-gray-700 mb-1">Video (opsional, MP4/AVI)</label>
-                        <input type="file" name="video" id="video" accept="video/*" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue">
-                    </div>
-
-                    {{-- Gambar Multiple --}}
-                    <div class="md:col-span-2">
-                        <label for="images" class="block text-sm font-medium text-gray-700 mb-1">Upload Gambar (bisa lebih dari satu)</label>
-                        <input type="file" name="images[]" id="images" accept="image/*" multiple class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-custom-blue focus:border-custom-blue">
-                    </div>
-
-                    {{-- Tombol --}}
-                    <div class="md:col-span-2 text-right">
-                        <button type="submit" class="bg-green-500 text-white font-semibold px-6 py-3 rounded-md hover:bg-green-600 transition-colors">Simpan Blog</button>
-                    </div>
-                </form>
-
-                <!-- Script untuk dropdown subkategori -->
-                <script>
-                    const subcategories = {
-                        'rental': ['Motor', 'Mobil'],
-                        'paket wisata': ['Parangtritis', 'Tugu', 'Merapi', 'Malioboro']
-                    };
-
-                    document.getElementById('kategori').addEventListener('change', function() {
-                        let selected = this.value;
-                        let subs = subcategories[selected] || [];
-                        let subSelect = document.getElementById('subkategori');
-
-                        // Hapus semua opsi lama
-                        subSelect.innerHTML = '<option value="">Pilih Subkategori</option>';
-
-                        // Tambahkan opsi baru
-                        subs.forEach(function(sub) {
-                            let opt = document.createElement('option');
-                            opt.value = sub.toLowerCase();
-                            opt.text = sub;
-                            subSelect.add(opt);
-                        });
-                    });
-                </script>
-            </div>
+                <div class="flex justify-end pt-4 gap-4">
+                    <a href="{{ route('blogs.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-md transition-colors">Batal</a>
+                    <button type="submit" class="bg-custom-blue hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md transition-colors">Simpan Blog</button>
+                </div>
+            </form>
         </div>
-    </section>
-
+    </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const kategoriDropdown = document.getElementById('kategori');
+        const subkategoriDropdown = document.getElementById('subkategori');
+        
+        const oldKategori = "{{ old('kategori') }}";
+        const oldSubkategori = "{{ old('subkategori') }}";
+
+        const subkategoriData = {
+            'Destinasi Populer': ['Pantai', 'Candi', 'Gunung', 'Air Terjun', 'Museum'],
+            'Kuliner': ['Kaki Lima', 'Restoran', 'Kafe', 'Jajanan Tradisional'],
+            'Budaya': ['Seni Pertunjukan', 'Kerajinan', 'Upacara Adat'],
+            'Tips Perjalanan': ['Backpacking', 'Liburan Keluarga', 'Solo Traveling'],
+            'Rental': ['Mobil', 'Motor']
+        };
+
+        function updateSubkategori(selectedKategori) {
+            subkategoriDropdown.innerHTML = '<option value="">Pilih Subkategori</option>';
+
+            if (selectedKategori && subkategoriData[selectedKategori]) {
+                const options = subkategoriData[selectedKategori];
+                options.forEach(function(item) {
+                    const option = document.createElement('option');
+                    option.value = item;
+                    option.innerText = item;
+                    if (item === oldSubkategori) {
+                        option.selected = true;
+                    }
+                    subkategoriDropdown.appendChild(option);
+                });
+                subkategoriDropdown.disabled = false;
+            } else {
+                subkategoriDropdown.disabled = true;
+                subkategoriDropdown.innerHTML = '<option value="">Pilih Kategori Terlebih Dahulu</option>';
+            }
+        }
+
+        if (kategoriDropdown.value) {
+            updateSubkategori(kategoriDropdown.value);
+        } else if (oldKategori) {
+            kategoriDropdown.value = oldKategori;
+            updateSubkategori(oldKategori);
+        }
+
+        kategoriDropdown.addEventListener('change', function() {
+            updateSubkategori(this.value);
+        });
+    });
+</script>
+@endpush

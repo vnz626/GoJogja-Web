@@ -3,30 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
-use App\Models\BlogImage; // Pastikan model ini ada jika Anda menggunakannya
+use App\Models\BlogImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage; // Diperlukan untuk menghapus file
-use Illuminate\Support\Str; // Jika Anda ingin menggunakan Str helper di controller
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class BlogController extends Controller
 {
-    /**
-     * Menampilkan daftar blog dengan filter, pencarian, dan pengurutan.
-     */
     public function index(Request $request)
     {
-        $query = Blog::query();
+        $query = Blog::query()->with('images');
 
-        // Filter untuk menampilkan hanya artikel milik pengguna yang login jika ada parameter user_articles
         if ($request->has('user_articles') && Auth::check() && $request->user_articles == Auth::id()) {
             $query->where('user_id', Auth::id());
         }
-        // Jika Anda ingin semua blog tampil secara default (bukan hanya milik user),
-        // Anda bisa mengabaikan kondisi di atas atau membuatnya opsional.
-        // Untuk halaman blog publik, biasanya menampilkan semua blog.
 
-        // 1. Filter berdasarkan Pencarian (Search)
         $searchTerm = $request->input('search');
         if ($searchTerm) {
             $query->where(function($q) use ($searchTerm) {
@@ -35,13 +28,11 @@ class BlogController extends Controller
             });
         }
 
-        // 2. Filter berdasarkan Kategori Blog
         $filterCategory = $request->input('filter_category');
         if ($filterCategory && $filterCategory !== 'semua') {
             $query->where('kategori', $filterCategory);
         }
-
-        // 3. Urutkan (Sort)
+        
         $sortBy = $request->input('sort_by');
         if ($sortBy) {
             switch ($sortBy) {
@@ -54,21 +45,17 @@ class BlogController extends Controller
                 case 'judul_za':
                     $query->orderBy('title', 'desc');
                     break;
-                case 'terbaru': // Default atau jika 'terbaru' dipilih
+                case 'terbaru':
                 default:
                     $query->orderBy('created_at', 'desc');
                     break;
             }
         } else {
-            // Default pengurutan jika tidak ada parameter sort_by
              $query->orderBy('created_at', 'desc');
         }
 
-        // Ambil data dengan pagination
-        $blogs = $query->paginate(9); // Ganti 9 dengan jumlah item per halaman yang Anda inginkan
-
-        // Mengambil semua kategori unik dari database untuk dropdown filter
-        $categories = Blog::select('kategori')->whereNotNull('kategori')->distinct()->orderBy('kategori')->pluck('kategori')->all();
+        $blogs = $query->paginate(9);
+        $categories = Blog::select('kategori')->whereNotNull('kategori')->where('kategori', '!=', '')->distinct()->orderBy('kategori')->pluck('kategori')->all();
 
         return view('blogs.index', [
             'blogs' => $blogs,
@@ -79,169 +66,153 @@ class BlogController extends Controller
         ]);
     }
 
-    /**
-     * Menampilkan form untuk membuat blog baru.
-     */
     public function create()
     {
-        // Pastikan hanya user yang login yang bisa membuat blog
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Anda harus login untuk membuat artikel.');
-        }
         return view('blogs.create');
     }
 
-    /**
-     * Menyimpan blog baru ke database.
-     */
     public function store(Request $request)
     {
-        if (!Auth::check()) {
-            abort(403, 'Anda tidak diizinkan melakukan aksi ini.');
-        }
-
-        $data = $request->validate([
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'kategori' => 'required|string|max:255',
-            'subkategori' => 'nullable|string|max:255', // Dibuat nullable jika tidak selalu ada
-            'video' => 'nullable|file|mimetypes:video/mp4,video/avi,video/mpeg|max:102400', // max 100MB
-            'images' => 'nullable|array', // Pastikan input name di form adalah images[]
-            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048' // Setiap file di array images
+            'subkategori' => 'nullable|string|max:255',
+            'image_utama' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/avi,video/mpeg|max:102400',
         ]);
 
-        $data['user_id'] = Auth::id();
-        $data['slug'] = Str::slug($data['title'] . '-' . uniqid()); // Membuat slug unik
+        $dataToCreate = [
+            'user_id' => Auth::id(),
+            'title' => $validatedData['title'],
+            'slug' => Str::slug($validatedData['title'] . '-' . uniqid()),
+            'content' => $validatedData['content'],
+            'kategori' => $validatedData['kategori'],
+            'sub_kategori' => $validatedData['subkategori'] ?? null,
+            'image_url' => null,
+            'video_path' => null,
+        ];
 
-        // Simpan video jika ada
-        if ($request->hasFile('video')) {
-            $data['video'] = $request->file('video')->store('blog_videos', 'public');
+        if ($request->hasFile('image_utama')) {
+            $dataToCreate['image_url'] = $request->file('image_utama')->store('blog_thumbnails', 'public');
         }
 
-        // Simpan data blog
-        $data['subkategori'] = $request->input('subkategori');
-        unset($data['subkategori']);
-        $blog = Blog::create($data);
+        if ($request->hasFile('video')) {
+            $dataToCreate['video_path'] = $request->file('video')->store('blog_videos', 'public');
+        }
 
-        // Simpan setiap gambar yang diupload
+        $blog = Blog::create($dataToCreate);
+
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $imagefile) {
                 $path = $imagefile->store('blog_images', 'public');
-                // Pastikan Model BlogImage ada dan kolomnya sesuai
-                BlogImage::create([
-                    'blog_id' => $blog->id,
-                    'filename' => $path // atau 'path' atau nama kolom yang sesuai
-                ]);
+                $blog->images()->create(['filename' => $path]);
             }
         }
 
         return redirect()->route('blogs.index')->with('success', 'Blog berhasil dibuat.');
     }
 
-    /**
-     * Menampilkan detail satu blog.
-     */
     public function show(Blog $blog)
     {
-        // Jika Anda ingin relasi 'images' dan 'user' ikut terbawa:
-        // $blog->load('images', 'user');
-        return view('blogs.show', ['blog' => $blog->load('images')]);
+        $blog->load('images', 'user');
+        return view('blogs.show', compact('blog'));
     }
 
-    /**
-     * Menampilkan form untuk mengedit blog.
-     */
     public function edit(Blog $blog)
     {
-        // Pastikan hanya pemilik blog yang bisa mengedit
-        if (Auth::id() !== $blog->user_id) {
-            abort(403, 'Anda tidak diizinkan mengedit artikel ini.');
+        if (Auth::id() !== $blog->user_id && !(Auth::check() && optional(Auth::user())->is_admin)) {
+            abort(403);
         }
+        $blog->load('images'); // Pastikan memuat relasi images untuk ditampilkan di form edit
         return view('blogs.edit', compact('blog'));
     }
 
-    /**
-     * Mengupdate data blog di database.
-     */
     public function update(Request $request, Blog $blog)
     {
-        if (Auth::id() !== $blog->user_id) {
-            abort(403, 'Anda tidak diizinkan mengedit artikel ini.');
+        if (Auth::id() !== $blog->user_id && !(Auth::check() && optional(Auth::user())->is_admin)) {
+            abort(403);
         }
 
-        $data = $request->validate([
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'kategori' => 'required|string|max:255',
             'subkategori' => 'nullable|string|max:255',
-            'video' => 'nullable|file|mimetypes:video/mp4,video/avi,video/mpeg|max:102400',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048'
+            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'delete_images' => 'nullable|array',
+            'delete_images.*' => 'integer|exists:blog_images,id',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/avi|max:102400',
+            'remove_video' => 'nullable|boolean',
         ]);
 
-        // Update slug jika judul berubah
-        if ($blog->title !== $data['title']) {
-            $data['slug'] = Str::slug($data['title'] . '-' . uniqid());
-        }
-
-
-        // Simpan video baru jika ada
-        if ($request->hasFile('video')) {
-            // Hapus video lama jika ada
-            if ($blog->video) {
-                Storage::disk('public')->delete($blog->video);
+        if ($request->has('delete_images')) {
+            $imagesToDelete = BlogImage::whereIn('id', $request->input('delete_images'))->where('blog_id', $blog->id)->get();
+            foreach ($imagesToDelete as $image) {
+                Storage::disk('public')->delete($image->filename);
+                $image->delete();
             }
-            $data['video'] = $request->file('video')->store('blog_videos', 'public');
         }
 
-        // Update kategori dan subkategori
-        $data['sub_kategori'] = $request->input('subkategori');
-        unset($data['subkategori']);
-
-        $blog->update($data);
-
-        // Simpan gambar baru jika ada (mungkin perlu logika untuk menghapus gambar lama tertentu)
         if ($request->hasFile('images')) {
-            // Untuk contoh sederhana, kita tambahkan gambar baru.
-            // Untuk sistem yang lebih kompleks, Anda mungkin ingin menghapus gambar lama dulu
-            // atau memberikan opsi untuk memilih gambar mana yang dihapus.
             foreach ($request->file('images') as $imagefile) {
                 $path = $imagefile->store('blog_images', 'public');
-                BlogImage::create([
-                    'blog_id' => $blog->id,
-                    'filename' => $path
-                ]);
+                $blog->images()->create(['filename' => $path]);
             }
         }
+
+        $dataToUpdate = [
+            'title' => $validatedData['title'],
+            'content' => $validatedData['content'],
+            'kategori' => $validatedData['kategori'],
+            'sub_kategori' => $validatedData['subkategori'] ?? null,
+        ];
+        
+        if ($blog->title !== $dataToUpdate['title']) {
+            $dataToUpdate['slug'] = Str::slug($dataToUpdate['title'] . '-' . uniqid());
+        }
+
+        if ($request->hasFile('video')) {
+            if ($blog->video_path) { Storage::disk('public')->delete($blog->video_path); }
+            $dataToUpdate['video_path'] = $request->file('video')->store('blog_videos', 'public');
+        } elseif ($request->input('remove_video') == '1') {
+            if ($blog->video_path) { Storage::disk('public')->delete($blog->video_path); }
+            $dataToUpdate['video_path'] = null;
+        }
+        
+        $blog->update($dataToUpdate);
+
+        $firstRemainingImage = $blog->refresh()->images()->orderBy('id', 'asc')->first();
+        if ($firstRemainingImage && is_null($blog->image_url)) {
+            $blog->image_url = $firstRemainingImage->filename;
+        } elseif (!$firstRemainingImage) {
+            $blog->image_url = null;
+        }
+        $blog->save();
 
         return redirect()->route('blogs.show', $blog)->with('success', 'Blog berhasil diperbarui.');
     }
 
-    /**
-     * Menghapus blog dari database.
-     */
     public function destroy(Blog $blog)
     {
-        if (Auth::id() !== $blog->user_id) {
-            abort(403, 'Anda tidak diizinkan menghapus artikel ini.');
+        if (Auth::id() !== $blog->user_id && !(Auth::check() && optional(Auth::user())->is_admin)) {
+            abort(403);
         }
-
-        // Hapus file gambar terkait dari storage
-        if ($blog->images) { // Asumsi relasi 'images' ada di model Blog
+        
+        if ($blog->image_url) { Storage::disk('public')->delete($blog->image_url); }
+        if ($blog->video_path) { Storage::disk('public')->delete($blog->video_path); }
+        if ($blog->images) {
             foreach ($blog->images as $image) {
-                Storage::disk('public')->delete($image->filename); // atau $image->path
+                Storage::disk('public')->delete($image->filename);
             }
         }
-        // Hapus file video terkait dari storage
-        if ($blog->video) {
-            Storage::disk('public')->delete($blog->video);
-        }
-
-        // Hapus record gambar dari tabel blog_images (jika relasi di-setup dengan onDelete cascade, ini otomatis)
-        // Jika tidak, $blog->images()->delete(); // sebelum $blog->delete()
-
+        
         $blog->delete();
-
+        
         return redirect()->route('blogs.index')->with('success', 'Blog berhasil dihapus.');
     }
-}
+
+} 
