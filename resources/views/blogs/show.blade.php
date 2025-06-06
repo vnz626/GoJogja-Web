@@ -66,7 +66,7 @@
                         <h2 class="text-xl font-bold text-gray-800 mb-4">Info Blog</h2>
                         <div class="space-y-3 text-gray-700">
                             <div class="flex"><span class="font-semibold w-28 flex-shrink-0">Kategori:</span><span>{{ $blog->kategori }}</span></div>
-                            @if($blog->sub_kategori)<div class="flex"><span class="font-semibold w-28 flex-shrink-0">Subkategori:</span><span>{{ $blog->sub_kategori }}</span></div>@endif
+                            @if($blog->subkategori)<div class="flex"><span class="font-semibold w-28 flex-shrink-0">Subkategori:</span><span>{{ $blog->subkategori }}</span></div>@endif
                             <div class="flex"><span class="font-semibold w-28 flex-shrink-0">Dibuat:</span><span>{{ $blog->created_at->translatedFormat('d F Y') }}</span></div>
                             <div class="flex"><span class="font-semibold w-28 flex-shrink-0">Penulis:</span><a href="#" class="text-custom-blue hover:underline">{{ $blog->user->name ?? 'Tim GoJogja' }}</a></div>
                         </div>

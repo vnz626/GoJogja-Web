@@ -116,6 +116,53 @@
 
 @push('scripts')
 <script>
-    // ... JavaScript untuk subkategori dinamis tetap sama seperti sebelumnya ...
+    document.addEventListener('DOMContentLoaded', function() {
+        const kategoriDropdown = document.getElementById('kategori');
+        const subkategoriDropdown = document.getElementById('subkategori');
+        
+        const currentKategori = "{{ old('kategori', $blog->kategori) }}";
+        const currentSubkategori = "{{ old('subkategori', $blog->subkategori) }}";
+
+        const subkategoriData = {
+            'Destinasi Populer': ['Pantai', 'Candi', 'Gunung', 'Air Terjun', 'Museum'],
+            'Kuliner': ['Kaki Lima', 'Restoran', 'Kafe', 'Jajanan Tradisional'],
+            'Budaya': ['Seni Pertunjukan', 'Kerajinan', 'Upacara Adat'],
+            'Tips Perjalanan': ['Backpacking', 'Liburan Keluarga', 'Solo Traveling'],
+            'Rental': ['Mobil', 'Motor']
+        };
+
+        function updateSubkategori(selectedKategori) {
+            subkategoriDropdown.innerHTML = '<option value="">Pilih Subkategori</option>';
+
+            if (selectedKategori && subkategoriData[selectedKategori]) {
+                const options = subkategoriData[selectedKategori];
+                options.forEach(function(item) {
+                    const option = document.createElement('option');
+                    option.value = item;
+                    option.innerText = item;
+                    if (item === currentSubkategori) {
+                        option.selected = true;
+                    }
+                    subkategoriDropdown.appendChild(option);
+                });
+                subkategoriDropdown.disabled = false;
+            } else {
+                subkategoriDropdown.disabled = true;
+            }
+        }
+
+        kategoriDropdown.addEventListener('change', function() {
+            // Saat kategori diubah, reset nilai subkategori tersimpan agar tidak salah pilih
+            // Anda bisa hapus baris ini jika tidak ingin subkategori ter-reset
+            // currentSubkategori = ''; 
+            updateSubkategori(this.value);
+        });
+        
+        // Panggil fungsi saat halaman pertama kali dimuat
+        // untuk mengisi subkategori berdasarkan kategori yang sudah ada
+        if (kategoriDropdown.value) {
+            updateSubkategori(kategoriDropdown.value);
+        }
+    });
 </script>
 @endpush

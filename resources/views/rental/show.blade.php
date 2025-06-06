@@ -16,13 +16,11 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="bg-white p-6 sm:p-8 rounded-lg shadow-xl flex flex-col lg:flex-row gap-8 mt-[-4rem] relative z-20">
 
-            {{-- Konten Kiri --}}
             <div class="lg:w-2/3">
                 <div class="mb-6 rounded-lg overflow-hidden shadow-md">
                     <img src="{{ $vehicle['image_url'] ?? '/images/rental/default-car.png' }}" alt="{{ $vehicle['name'] ?? 'Gambar Kendaraan' }}" id="mainVehicleImage" class="w-full h-auto max-h-[450px] object-contain">
                 </div>
 
-                {{-- Galeri Foto --}}
                 @if(isset($vehicle['images']) && count($vehicle['images']) > 0)
                 <div class="mb-8">
                     <h3 class="text-xl font-semibold text-gray-800 mb-3">Galeri Foto</h3>
@@ -78,6 +76,16 @@
                             get totalCost() {
                                 const optionAdditionalCost = this.optionsCost[this.selectedOption] || 0;
                                 return (this.basePrice + optionAdditionalCost) * this.durationDays;
+                            },
+                            get whatsappUrl() {
+                                const phone = '6281344081486';
+                                const vehicleName = '{{ $vehicle['name'] ?? 'Kendaraan' }}';
+                                const durationText = this.durationDays + ' hari';
+                                const optionText = this.selectedOption.replace('_', ' ');
+
+                                const text = `Halo GoJogja,\n\nSaya tertarik untuk menyewa kendaraan berikut:\n- Nama Kendaraan: *${vehicleName}*\n- Durasi Sewa: *${durationText}*\n- Opsi Rental: *${optionText}*\n- Total Biaya: *Rp ${this.totalCost.toLocaleString('id-ID')}*\n\nMohon informasinya lebih lanjut. Terima kasih.`;
+
+                                return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
                             }
                         }"
                     >
@@ -94,7 +102,7 @@
                                 Rp <span x-text="totalCost.toLocaleString('id-ID')"></span>
                             </p>
                              <p class="text-center text-sm text-gray-500" x-show="durationDays > 0">
-                                (<span x-text="durationDays">1</span> hari <span x-text="selectedOption.replace('_', ' ')"></span>)
+                                (<span x-text="durationDays">1</span> hari, <span x-text="selectedOption.replace(/_/g, ' ')"></span>)
                             </p>
                         </div>
 
@@ -123,18 +131,18 @@
                             </select>
                         </div>
 
+                        <a :href="whatsappUrl" target="_blank" class="w-full flex items-center justify-center gap-2 bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition-colors text-lg shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 16 16">
+                              <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.89 7.89 0 0 0 13.6 2.326zM7.994 14.521a6.57 6.57 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943s-.182-.133-.38-.232z"/>
+                            </svg>
+                            <span>Hubungi via WhatsApp</span>
+                        </a>
 
-                        <button type="button" class="w-full bg-custom-blue text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors text-lg shadow-md">
-                            Pesan Sekarang
-                        </button>
-
-                        <div class="mb-6 flex justify-end">
-                            <a href="{{ route('rental.index') }}" class="mt-6 w-full text-center bg-custom-blue text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
-                                Kembali ke Rental
+                        <div class="mt-4">
+                            <a href="{{ route('rental.index') }}" class="w-full text-center block text-custom-blue hover:text-blue-700 font-semibold py-2 transition-colors">
+                                Kembali ke Daftar Rental
                             </a>
                         </div>
-                        
-                        <p class="text-xs text-gray-500 text-center mt-3">Atau hubungi kami via WhatsApp!</p>
                     </div>
                 </div>
             </div>
@@ -149,7 +157,7 @@
         <script>
           document.addEventListener('DOMContentLoaded', () => {
             Fancybox.bind("[data-fancybox^='gallery']", {
-              Thumbs: false, // Menonaktifkan thumbnail di dalam lightbox jika tidak mau
+              Thumbs: false,
               Toolbar: {
                 display: [
                   "zoom",

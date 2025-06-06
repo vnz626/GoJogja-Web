@@ -1,111 +1,188 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Destination;
-use App\Models\Subcategory;
 use App\Models\Category;
-use App\Http\Requests\DestinationRequest;
+use App\Models\Subcategory;
+use App\Models\DestinationImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 class DestinationController extends Controller
 {
-    // Daftar destinasi untuk dashboard admin
     public function index()
     {
-        $destinations = Destination::with('subcategory')->get();
+        $destinations = Destination::with(['category', 'subcategory'])->latest()->get();
         return view('admin.wisata.index', compact('destinations'));
     }
 
-    // Form tambah destinasi baru (admin)
     public function create()
     {
         $categories = Category::all();
         $subcategories = Subcategory::all();
-        return view('admin.wisata.create', compact('subcategories','categories'));
+        return view('admin.wisata.create', compact('categories', 'subcategories'));
     }
 
-    // Simpan destinasi baru (admin)
-    public function store(DestinationRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->validated();
-        $destination = Destination::create([
-            'title'          => $data['title'],
-            'description'    => $data['description'],
-            'price'          => $data['price'],
-            'open'           => $data['open'],
-            'close'          => $data['close'],
-            'subcategory_id' => $data['subcategory_id'],
-            'category'       => $data['category'],
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'price' => 'required|numeric',
+            'open_time' => 'required',
+            'close_time' => 'required',
+            'subcategory_id' => 'required|exists:subcategories,id',
+            'category_id' => 'required|exists:categories,id',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Simpan file gambar ke storage disk 'public'
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('destinations', 'public');
-                $destination->images()->create(['image_url' => $path]);
+        DB::beginTransaction();
+        try {
+            $destination = Destination::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'price' => $request->price,
+                'open_time' => $request->open_time,
+                'close_time' => $request->close_time,
+                'subcategory_id' => $request->subcategory_id,
+                'category_id' => $request->category_id,
+                'is_popular' => $request->has('is_popular'),
+            ]);
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('destinations', 'public');
+                    DestinationImage::create([
+                        'destination_id' => $destination->id,
+                        'image_path' => $path,
+                    ]);
+                }
             }
+
+            DB::commit();
+            return redirect()->route('admin.wisata.index')->with('success', 'Destinasi berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
         }
-        return redirect()->route('admin.wisata.index')
-                         ->with('success', 'Destinasi berhasil ditambahkan.');
     }
 
-    // Form edit destinasi (admin)
-    public function edit(Destination $destination)
+    public function edit($id)
     {
+        $destination = Destination::with('images')->findOrFail($id);
+        $categories = Category::all();
         $subcategories = Subcategory::all();
-        return view('admin.wisata.edit', compact('destination','subcategories'));
+
+        return view('admin.wisata.edit', compact('destination', 'categories', 'subcategories'));
     }
 
-    // Update destinasi (admin)
-    public function update(DestinationRequest $request, Destination $destination)
+    public function update(Request $request, $id)
     {
-        $data = $request->validated();
-        $destination->update([
-            'title'          => $data['title'],
-            'description'    => $data['description'],
-            'price'          => $data['price'],
-            'open'           => $data['open'],
-            'close'          => $data['close'],
-            'subcategory_id' => $data['subcategory_id'],
-            'category'       => $data['category'],
+        $destination = Destination::findOrFail($id);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'price' => 'required|numeric',
+            'open_time' => 'required',
+            'close_time' => 'required',
+            'subcategory_id' => 'required|exists:subcategories,id',
+            'category_id' => 'required|exists:categories,id',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Jika upload gambar baru, simpan dan hubungkan
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('destinations', 'public');
-                $destination->images()->create(['image_url' => $path]);
+        DB::beginTransaction();
+        try {
+            $destination->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'price' => $request->price,
+                'open_time' => $request->open_time,
+                'close_time' => $request->close_time,
+                'subcategory_id' => $request->subcategory_id,
+                'category_id' => $request->category_id,
+                'is_popular' => $request->has('is_popular'),
+            ]);
+
+            if ($request->hasFile('images')) {
+                foreach ($destination->images as $image) {
+                    Storage::disk('public')->delete($image->image_path);
+                    $image->delete();
+                }
+
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('destinations', 'public');
+                    DestinationImage::create([
+                        'destination_id' => $destination->id,
+                        'image_path' => $path,
+                    ]);
+                }
             }
+
+            DB::commit();
+            return redirect()->route('admin.wisata.index')->with('success', 'Destinasi berhasil diperbarui!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan saat mengupdate data: ' . $e->getMessage());
         }
-        return redirect()->route('admin.wisata.index')
-                         ->with('success', 'Destinasi berhasil diubah.');
     }
 
-    // Hapus destinasi (admin)
-    public function destroy(Destination $destination)
+    public function destroy($id)
     {
-        // Hapus file gambar dari storage
-        foreach ($destination->images as $img) {
-            Storage::disk('public')->delete($img->image_url);
+        $destination = Destination::findOrFail($id);
+
+        foreach ($destination->images as $image) {
+            Storage::disk('public')->delete($image->image_path);
+            $image->delete();
         }
-        $destination->delete(); // otomatis menghapus record images karena cascade
-        return redirect()->route('admin.wisata.index')
-                         ->with('success', 'Destinasi berhasil dihapus.');
+
+        $destination->delete();
+        return redirect()->route('admin.wisata.index')->with('success', 'Destinasi berhasil dihapus.');
     }
 
-    // Daftar destinasi kategori "Destinasi Populer" (frontend user)
-    public function publicIndex()
+    public function getSubcategories($categoryId)
     {
-        $destinations = Destination::with('images','subcategory')
-                         ->where('category','Destinasi Populer')
-                         ->get();
-        return view('paket-wisata.index', compact('destinations'));
+        $subcategories = Subcategory::where('category_id', $categoryId)->get();
+        return response()->json($subcategories);
     }
-
-    // Detail destinasi (frontend user)
-    public function publicShow(Destination $destination)
+    
+    public function publicShow($id)
     {
-        return view('paket-wisata.show', compact('destination'));
+        // Data Dummy Lengkap
+        $allDestinations = collect([
+            ['id' => 1, 'slug' => 'gembira-loka-zoo', 'name' => 'Gembira Loka Zoo', 'type' => 'Kebun Binatang', 'open_hours' => '09:00 - 17:00', 'ticket_price' => 75000, 'images' => collect([['image_path' => '/images/destinasi/gembira_loka.jpg']]), 'description' => 'Kebun binatang terlengkap di Yogyakarta dengan berbagai koleksi satwa dari seluruh dunia.'],
+            ['id' => 2, 'slug' => 'candi-prambanan', 'name' => 'Candi Prambanan', 'type' => 'Candi', 'open_hours' => '08:00 - 17:00', 'ticket_price' => 350000, 'images' => collect([['image_path' => '/images/destinasi/prambanan.jpg']]), 'description' => 'Kompleks candi Hindu terbesar di Indonesia, mahakarya abad ke-9.'],
+            ['id' => 3, 'slug' => 'malioboro-street', 'name' => 'Malioboro Street', 'type' => 'Area Belanja & Kuliner', 'open_hours' => '24 Jam (toko bervariasi)', 'ticket_price' => 0, 'images' => collect([['image_path' => '/images/destinasi/malioboro.jpg']]), 'description' => 'Jantung kota Jogja, pusat perbelanjaan oleh-oleh, kerajinan tangan, dan kuliner lesehan.'],
+            ['id' => 4, 'slug' => 'pantai-parangtritis', 'name' => 'Pantai Parangtritis', 'type' => 'Pantai', 'open_hours' => '24 Jam', 'ticket_price' => 10000, 'images' => collect([['image_path' => '/images/destinasi/parangtritis.jpg']]), 'description' => 'Pantai paling terkenal di Yogyakarta dengan legenda Nyi Roro Kidul dan pemandangan sunset yang indah.'],
+            ['id' => 5, 'slug' => 'keraton-yogyakarta', 'name' => 'Keraton Yogyakarta', 'type' => 'Istana & Museum', 'open_hours' => '09:00 - 14:00', 'ticket_price' => 15000, 'images' => collect([['image_path' => '/images/destinasi/keraton.webp']]), 'description' => 'Pusat kebudayaan Jawa dan kediaman resmi Sultan Hamengkubuwono.'],
+            ['id' => 6, 'slug' => 'tebing-breksi', 'name' => 'Tebing Breksi', 'type' => 'Wisata Alam & Spot Foto', 'open_hours' => '06:00 - 20:00', 'ticket_price' => 10000, 'images' => collect([['image_path' => '/images/destinasi/breksi.jpg']]), 'description' => 'Bekas tambang batu kapur yang diubah menjadi destinasi wisata dengan ukiran artistik dan pemandangan kota.'],
+        ]);
+
+        $allPackages = collect([
+            ['id' => 101, 'slug' => 'jogja-classic-heritage-1-hari', 'name' => 'Jogja Classic Heritage (1 Hari)', 'duration_text' => '1 Hari', 'type' => 'Budaya & Sejarah', 'price' => 450000, 'images' => collect([['image_path' => '/images/paket-wisata/paket1.png']]), 'description' => 'Kunjungi Candi Borobudur, Candi Prambanan, dan Keraton Yogyakarta.'],
+            ['id' => 102, 'slug' => 'eksplorasi-pantai-gunung-kidul-2h1m', 'name' => 'Eksplorasi Pantai Gunung Kidul (2H1M)', 'duration_text' => '2 Hari 1 Malam', 'type' => 'Alam & Pantai', 'price' => 1200000, 'images' => collect([['image_path' => '/images/paket-wisata/pantai-gk.jpg']]), 'description' => 'Nikmati keindahan pantai-pantai eksotis Gunung Kidul, menginap semalam.'],
+            ['id' => 103, 'slug' => 'adventure-merapi-lava-tour-setengah-hari', 'name' => 'Adventure Merapi Lava Tour (Setengah Hari)', 'duration_text' => 'Setengah Hari', 'type' => 'Petualangan', 'price' => 350000, 'images' => collect([['image_path' => '/images/paket-wisata/merapi.jpg']]), 'description' => 'Rasakan sensasi berpetualang di lereng Merapi dengan Jeep.'],
+        ]);
+
+        $allItems = $allDestinations->merge($allPackages);
+
+        $item = $allItems->firstWhere('id', (int)$id);
+
+        if (!$item) {
+            abort(404);
+        }
+        
+        $destination = (object) $item;
+        $destination->category = (object) ($item['category'] ?? ['name' => 'Wisata']);
+        $destination->subcategory = (object) ($item['subcategory'] ?? ['name' => $item['type'] ?? 'Umum']);
+        $destination->images = collect($item['images'] ?? [])->map(fn($img) => (object) $img);
+        $destination->open_time = $item['open_hours'] ?? 'N/A';
+        $destination->close_time = '';
+        $destination->price = $item['ticket_price'] ?? $item['price'] ?? 0;
+
+        return view('wisata.show', compact('destination'));
     }
 }

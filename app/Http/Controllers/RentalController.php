@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class RentalController extends Controller
 {
-    protected $allVehiclesData;
+    public $allVehiclesData;
 
     public function __construct()
     {

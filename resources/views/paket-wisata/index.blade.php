@@ -143,7 +143,7 @@
                 </form>
 
                 @if($items->isEmpty())
-                    <div class="text-center py-20">
+                    <div class="text-center py-20 bg-white rounded-lg shadow">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         <p class="text-2xl text-gray-500">Oops! Tidak ada hasil ditemukan.</p>
                         <p class="text-gray-400 mt-2">Silakan coba dengan kata kunci atau filter yang berbeda.</p>
@@ -153,14 +153,18 @@
                         @if ($currentFilters['view_mode'] == 'destinasi')
                             @foreach ($items as $item)
                                 <div class="bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden flex flex-col">
-                                    <img src="{{ $item['image_url'] ?? '/images/destinasi/default.jpg' }}" alt="{{ $item['name'] }}" class="w-full h-56 object-cover">
+                                    {{-- TAUTAN DIPERBAIKI DI SINI --}}
+                                    <a href="{{ route('wisata.show', ['destination' => $item['id']]) }}">
+                                        <img src="{{ $item['image_url'] ?? '/images/destinasi/default.jpg' }}" alt="{{ $item['name'] }}" class="w-full h-56 object-cover">
+                                    </a>
                                     <div class="p-5 flex flex-col flex-grow">
                                         <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $item['name'] }}</h3>
                                         <span class="inline-block bg-custom-blue text-white text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide mb-2 self-start">{{ $item['type'] }}</span>
                                         <p class="text-sm text-gray-600 mb-1"><span class="font-semibold">Jam Buka:</span> {{ $item['open_hours'] }}</p>
                                         <p class="text-sm text-gray-600 mb-3"><span class="font-semibold">Tiket Masuk:</span> Rp {{ number_format($item['ticket_price'], 0, ',', '.') }}</p>
                                         <p class="text-gray-700 text-sm mb-4 leading-relaxed flex-grow">{{ \Illuminate\Support\Str::limit($item['description'], 100) }}</p>
-                                        <a href="#" class="mt-auto w-full bg-custom-blue text-white text-center font-semibold py-2.5 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                                        {{-- TAUTAN DIPERBAIKI DI SINI --}}
+                                        <a href="{{ route('wisata.show', ['destination' => $item['id']]) }}" class="mt-auto w-full bg-custom-blue text-white text-center font-semibold py-2.5 px-4 rounded-md hover:bg-blue-700 transition-colors">
                                             Lihat Detail
                                         </a>
                                     </div>
@@ -169,7 +173,10 @@
                         @else {{-- Mode Paket Wisata --}}
                             @foreach ($items as $item)
                             <div class="bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden flex flex-col">
-                                <img src="{{ $item['image_url'] ?? '/images/paket-wisata/default.jpg' }}" alt="{{ $item['name'] }}" class="w-full h-56 object-cover">
+                                {{-- TAUTAN DIPERBAIKI DI SINI --}}
+                                <a href="{{ route('wisata.show', ['destination' => $item['id']]) }}">
+                                    <img src="{{ $item['image_url'] ?? '/images/paket-wisata/default.jpg' }}" alt="{{ $item['name'] }}" class="w-full h-56 object-cover">
+                                </a>
                                 <div class="p-5 flex flex-col flex-grow">
                                     <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $item['name'] }}</h3>
                                     <div class="flex items-center text-xs text-gray-500 mb-1">
@@ -185,7 +192,8 @@
                                         Rp {{ number_format($item['price'], 0, ',', '.') }}
                                         <span class="text-sm font-normal text-gray-500">/ pax</span>
                                     </p>
-                                    <a href="#" class="mt-auto w-full bg-custom-blue text-white text-center font-semibold py-2.5 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                                    {{-- TAUTAN DIPERBAIKI DI SINI --}}
+                                    <a href="{{ route('wisata.show', ['destination' => $item['id']]) }}" class="mt-auto w-full bg-custom-blue text-white text-center font-semibold py-2.5 px-4 rounded-md hover:bg-blue-700 transition-colors">
                                         Lihat Detail Paket
                                     </a>
                                 </div>
@@ -197,7 +205,7 @@
             </div>
         </section>
 
-            <footer class="relative text-white pt-20 pb-8 overflow-hidden mt-12">
+        <footer class="relative text-white pt-20 pb-8 overflow-hidden mt-12">
             <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/footer-background.webp');"></div>
             <div class="absolute inset-0 bg-overlay-blue opacity-80 z-1"></div>
             <div class="container mx-auto px-6 relative z-10">
@@ -227,24 +235,5 @@
             </div>
         </footer>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterForm = document.getElementById('filterForm');
-            const scrollPositionKey = 'scrollPosition-' + window.location.pathname;
-            if (filterForm) {
-                filterForm.addEventListener('submit', function() {
-                    sessionStorage.setItem(scrollPositionKey, window.scrollY);
-                });
-            }
-
-            const storedScrollPosition = sessionStorage.getItem(scrollPositionKey);
-            if (storedScrollPosition) {
-                setTimeout(() => {
-                    window.scrollTo(0, parseInt(storedScrollPosition, 10));
-                    sessionStorage.removeItem(scrollPositionKey);
-                }, 20);
-            }
-        });
-    </script>
 </body>
 </html>

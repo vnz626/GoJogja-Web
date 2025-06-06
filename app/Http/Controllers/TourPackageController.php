@@ -12,21 +12,23 @@ class TourPackageController extends Controller
         // Default view mode
         $viewMode = $request->input('view_mode', 'destinasi'); // 'destinasi' atau 'paket'
 
-        // Data Dummy untuk Destinasi Individual
+        // ===============================================
+        // DATA DUMMY (SAMA SEPERTI ASLINYA)
+        // ===============================================
         $allDestinations = collect([
-            ['id' => 1, 'name' => 'Gembira Loka Zoo', 'type' => 'Kebun Binatang', 'open_hours' => '09:00 - 17:00', 'ticket_price' => 75000, 'image_url' => '/images/destinasi/gembira_loka.jpg', 'description' => 'Kebun binatang terlengkap di Yogyakarta dengan berbagai koleksi satwa dari seluruh dunia.'],
-            ['id' => 2, 'name' => 'Candi Prambanan', 'type' => 'Candi', 'open_hours' => '08:00 - 17:00', 'ticket_price' => 350000, 'image_url' => '/images/destinasi/prambanan.jpg', 'description' => 'Kompleks candi Hindu terbesar di Indonesia, mahakarya abad ke-9.'],
-            ['id' => 3, 'name' => 'Malioboro Street', 'type' => 'Area Belanja & Kuliner', 'open_hours' => '24 Jam (toko bervariasi)', 'ticket_price' => 0, 'image_url' => '/images/destinasi/malioboro.jpg', 'description' => 'Jantung kota Jogja, pusat perbelanjaan oleh-oleh, kerajinan tangan, dan kuliner lesehan.'],
-            ['id' => 4, 'name' => 'Pantai Parangtritis', 'type' => 'Pantai', 'open_hours' => '24 Jam', 'ticket_price' => 10000, 'image_url' => '/images/destinasi/parangtritis.jpg', 'description' => 'Pantai paling terkenal di Yogyakarta dengan legenda Nyi Roro Kidul dan pemandangan sunset yang indah.'],
-            ['id' => 5, 'name' => 'Keraton Yogyakarta', 'type' => 'Istana & Museum', 'open_hours' => '09:00 - 14:00', 'ticket_price' => 15000, 'image_url' => '/images/destinasi/keraton.webp', 'description' => 'Pusat kebudayaan Jawa dan kediaman resmi Sultan Hamengkubuwono.'],
-            ['id' => 6, 'name' => 'Tebing Breksi', 'type' => 'Wisata Alam & Spot Foto', 'open_hours' => '06:00 - 20:00', 'ticket_price' => 10000, 'image_url' => '/images/destinasi/breksi.jpg', 'description' => 'Bekas tambang batu kapur yang diubah menjadi destinasi wisata dengan ukiran artistik dan pemandangan kota.'],
+            ['id' => 1, 'slug' => 'gembira-loka-zoo', 'name' => 'Gembira Loka Zoo', 'type' => 'Kebun Binatang', 'open_hours' => '09:00 - 17:00', 'ticket_price' => 75000, 'image_url' => '/images/destinasi/gembira_loka.jpg', 'description' => 'Kebun binatang terlengkap di Yogyakarta dengan berbagai koleksi satwa dari seluruh dunia.'],
+            ['id' => 2, 'slug' => 'candi-prambanan', 'name' => 'Candi Prambanan', 'type' => 'Candi', 'open_hours' => '08:00 - 17:00', 'ticket_price' => 350000, 'image_url' => '/images/destinasi/prambanan.jpg', 'description' => 'Kompleks candi Hindu terbesar di Indonesia, mahakarya abad ke-9.'],
+            ['id' => 3, 'slug' => 'malioboro-street', 'name' => 'Malioboro Street', 'type' => 'Area Belanja & Kuliner', 'open_hours' => '24 Jam (toko bervariasi)', 'ticket_price' => 0, 'image_url' => '/images/destinasi/malioboro.jpg', 'description' => 'Jantung kota Jogja, pusat perbelanjaan oleh-oleh, kerajinan tangan, dan kuliner lesehan.'],
+            ['id' => 4, 'slug' => 'pantai-parangtritis', 'name' => 'Pantai Parangtritis', 'type' => 'Pantai', 'open_hours' => '24 Jam', 'ticket_price' => 10000, 'image_url' => '/images/destinasi/parangtritis.jpg', 'description' => 'Pantai paling terkenal di Yogyakarta dengan legenda Nyi Roro Kidul dan pemandangan sunset yang indah.'],
+            ['id' => 5, 'slug' => 'keraton-yogyakarta', 'name' => 'Keraton Yogyakarta', 'type' => 'Istana & Museum', 'open_hours' => '09:00 - 14:00', 'ticket_price' => 15000, 'image_url' => '/images/destinasi/keraton.webp', 'description' => 'Pusat kebudayaan Jawa dan kediaman resmi Sultan Hamengkubuwono.'],
+            ['id' => 6, 'slug' => 'tebing-breksi', 'name' => 'Tebing Breksi', 'type' => 'Wisata Alam & Spot Foto', 'open_hours' => '06:00 - 20:00', 'ticket_price' => 10000, 'image_url' => '/images/destinasi/breksi.jpg', 'description' => 'Bekas tambang batu kapur yang diubah menjadi destinasi wisata dengan ukiran artistik dan pemandangan kota.'],
         ]);
-
-        // Data Dummy untuk Paket Wisata (sama seperti sebelumnya)
+        
         $allPackages = collect([
-            ['id' => 1, 'name' => 'Jogja Classic Heritage (1 Hari)', 'duration_text' => '1 Hari', 'duration_days' => 1, 'type' => 'Budaya & Sejarah', 'price' => 450000, 'description' => 'Kunjungi Candi Borobudur, Candi Prambanan, dan Keraton Yogyakarta.', 'image_url' => '/images/paket-wisata/paket1.png'],
-            ['id' => 2, 'name' => 'Eksplorasi Pantai Gunung Kidul (2H1M)', 'duration_text' => '2 Hari 1 Malam', 'duration_days' => 2, 'type' => 'Alam & Pantai', 'price' => 1200000, 'description' => 'Nikmati keindahan pantai-pantai eksotis Gunung Kidul, menginap semalam.', 'image_url' => '/images/paket-wisata/pantai-gk.jpg'],
-            // ... tambahkan data paket lainnya seperti sebelumnya ...
+            ['id' => 101, 'slug' => 'jogja-classic-heritage-1-hari', 'name' => 'Jogja Classic Heritage (1 Hari)', 'duration_text' => '1 Hari', 'duration_days' => 1, 'type' => 'Budaya & Sejarah', 'price' => 450000, 'description' => 'Kunjungi Candi Borobudur, Candi Prambanan, dan Keraton Yogyakarta.', 'image_url' => '/images/paket-wisata/paket1.png'],
+            ['id' => 102, 'slug' => 'eksplorasi-pantai-gunung-kidul-2h1m', 'name' => 'Eksplorasi Pantai Gunung Kidul (2H1M)', 'duration_text' => '2 Hari 1 Malam', 'duration_days' => 2, 'type' => 'Alam & Pantai', 'price' => 1200000, 'description' => 'Nikmati keindahan pantai-pantai eksotis Gunung Kidul, menginap semalam.', 'image_url' => '/images/paket-wisata/pantai-gk.jpg'],
+            ['id' => 103, 'slug' => 'adventure-merapi-lava-tour-setengah-hari', 'name' => 'Adventure Merapi Lava Tour (Setengah Hari)', 'duration_text' => 'Setengah Hari', 'duration_days' => 0.5, 'type' => 'Petualangan', 'price' => 350000, 'description' => 'Rasakan sensasi berpetualang di lereng Merapi dengan Jeep.', 'image_url' => '/images/paket-wisata/merapi.jpg'],
+
         ]);
 
         $itemsToDisplay = collect([]);
@@ -36,9 +38,9 @@ class TourPackageController extends Controller
             'view_mode' => $viewMode
         ];
 
+        // LOGIKA FILTER YANG DIKEMBALIKAN
         if ($viewMode === 'destinasi') {
             $itemsToDisplay = $allDestinations;
-            // Filter untuk Destinasi
             $filterType = $request->input('filter_dest_type');
             $filterPrice = $request->input('filter_dest_price');
             $currentFilters['currentDestType'] = $filterType;
@@ -49,7 +51,6 @@ class TourPackageController extends Controller
             }
             if ($filterPrice && $filterPrice !== 'semua') {
                 $itemsToDisplay = $itemsToDisplay->filter(function ($item) use ($filterPrice) {
-                    // Asumsi harga tiket, sesuaikan jika perlu
                     switch ($filterPrice) {
                         case '<50k': return $item['ticket_price'] < 50000;
                         case '50k-100k': return $item['ticket_price'] >= 50000 && $item['ticket_price'] <= 100000;
@@ -62,7 +63,6 @@ class TourPackageController extends Controller
 
         } elseif ($viewMode === 'paket') {
             $itemsToDisplay = $allPackages;
-            // Filter untuk Paket (seperti sebelumnya)
             $filterDuration = $request->input('filter_pkg_duration');
             $filterType = $request->input('filter_pkg_type');
             $filterPrice = $request->input('filter_pkg_price');
@@ -91,7 +91,6 @@ class TourPackageController extends Controller
             $filterOptions['uniquePkgTypes'] = $allPackages->pluck('type')->unique()->sort()->values()->all();
         }
         
-        // Pencarian Umum (bisa diterapkan setelah filter spesifik atau sebelum)
         if ($currentFilters['searchTerm']) {
             $searchTerm = $currentFilters['searchTerm'];
             $itemsToDisplay = $itemsToDisplay->filter(function ($item) use ($searchTerm) {
@@ -99,13 +98,6 @@ class TourPackageController extends Controller
             });
         }
         
-        // Sortir (opsional, bisa dibuat lebih kompleks berdasarkan viewMode)
-        // Untuk sekarang, kita sederhanakan atau hilangkan dulu sortir yang kompleks
-        // $sortBy = $request->input('sort_by');
-        // if ($sortBy) { ... }
-        // $currentFilters['currentSortBy'] = $sortBy;
-
-
         return view('paket-wisata.index', [
             'items' => $itemsToDisplay,
             'filterOptions' => $filterOptions,

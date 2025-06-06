@@ -43,6 +43,7 @@ Route::get('/rental-kendaraan', [RentalController::class, 'index'])->name('renta
 Route::get('/rental-kendaraan/{idOrSlug}', [RentalController::class, 'show'])->name('rental.show');
 
 Route::get('/paket-wisata', [TourPackageController::class, 'index'])->name('paket-wisata.index');
+Route::get('/wisata/{destination}', [DestinationController::class, 'publicShow'])->name('wisata.show');
 
 // =========================
 // 📖 BLOG (UNTUK USER)

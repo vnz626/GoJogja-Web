@@ -19,7 +19,8 @@ class Blog extends Model
         'slug', // Tambahkan slug
         'content',
         'kategori',
-        'sub_kategori', // Tambahkan sub_kategori
+        'subkategori',
+        'image_url', // Tambahkan sub_kategori
         'video_path',   // Ganti 'video' atau 'image' dengan 'video_path' jika itu nama kolomnya
         // 'image', // Hapus atau sesuaikan jika Anda menggunakan BlogImage untuk semua gambar
     ];

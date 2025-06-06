@@ -90,7 +90,7 @@ class BlogController extends Controller
             'slug' => Str::slug($validatedData['title'] . '-' . uniqid()),
             'content' => $validatedData['content'],
             'kategori' => $validatedData['kategori'],
-            'sub_kategori' => $validatedData['subkategori'] ?? null,
+            'subkategori' => $validatedData['subkategori'] ?? null,
             'image_url' => null,
             'video_path' => null,
         ];
@@ -168,7 +168,7 @@ class BlogController extends Controller
             'title' => $validatedData['title'],
             'content' => $validatedData['content'],
             'kategori' => $validatedData['kategori'],
-            'sub_kategori' => $validatedData['subkategori'] ?? null,
+            'subkategori' => $validatedData['subkategori'] ?? null,
         ];
         
         if ($blog->title !== $dataToUpdate['title']) {
