@@ -234,13 +234,31 @@
            </section>
         </main>
 
-        <footer class="relative text-white pt-20 pb-8 overflow-hidden">
+        <footer class="relative text-white pt-20 pb-8 overflow-hidden mt-12">
             <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/footer-background.webp');"></div>
             <div class="absolute inset-0 bg-overlay-blue opacity-80 z-1"></div>
             <div class="container mx-auto px-6 relative z-10">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     <div><h3 class="text-2xl font-bold mb-4">Kantor Kami</h3><p class="text-gray-200 leading-relaxed">PT GoJogja International<br>Caturtunggal - Kec. Depok,<br>Kabupaten Sleman, Yogyakarta, Indonesia</p></div>
-                    <div><h3 class="text-2xl font-bold mb-4">Hubungi Kami</h3><div class="space-y-4"><a href="tel:+6281344081486" class="inline-flex items-center gap-4 bg-white text-gray-800 font-medium rounded-full px-6 py-3 shadow-lg hover:bg-gray-100 transition-colors w-full md:w-auto justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-custom-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg><span>+62 813-4408-1486</span></a><a href="#" class="inline-flex items-center gap-4 bg-white text-gray-800 font-medium rounded-full px-6 py-3 shadow-lg hover:bg-gray-100 transition-colors w-full md:w-auto justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-custom-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 21.172a4 4 0 01-5.656 0l-4-4a4 4 0 010-5.656l1.586-1.586a4 4 0 015.656 0l4 4a4 4 0 010 5.656l-1.586 1.586z" /><path stroke-linecap="round" stroke-linejoin="round" d="M18 12h.01" /></svg><span>@gojogja_id</span></a><a href="mailto:gojogja@gmail.com" class="inline-flex items-center gap-4 bg-white text-gray-800 font-medium rounded-full px-6 py-3 shadow-lg hover:bg-gray-100 transition-colors w-full md:w-auto justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-custom-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg><span>gojogja@gmail.com</span></a></div></div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Hubungi Kami</h3>
+                        <div class="space-y-4">
+                            <a href="https://wa.me/6281344081486" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-4 bg-white text-gray-800 font-medium rounded-full px-6 py-3 shadow-lg hover:bg-gray-100 transition-colors w-full md:w-auto justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-custom-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                                <span>+62 813-4408-1486</span>
+                            </a>
+                            <a href="https://www.instagram.com/gojogja_id/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-4 bg-white text-gray-800 font-medium rounded-full px-6 py-3 shadow-lg hover:bg-gray-100 transition-colors w-full md:w-auto justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                                <span>@gojogja_id</span>
+                            </a>
+                            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=gojogja@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-4 bg-white text-gray-800 font-medium rounded-full px-6 py-3 shadow-lg hover:bg-gray-100 transition-colors w-full md:w-auto justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-custom-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                                <span>gojogja@gmail.com</span>
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="text-center text-gray-200 mt-20"><p class="font-bold">gojogja.com</p><p class="text-sm text-gray-300">Copyright © 2025 gojogja.com</p></div>
             </div>
